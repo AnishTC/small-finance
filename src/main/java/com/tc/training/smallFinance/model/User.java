@@ -1,19 +1,18 @@
 package com.tc.training.smallFinance.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 @Entity
 public class User {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID userId;
 
     private String firstName;
 
@@ -31,6 +30,16 @@ public class User {
 
     private String panCardNumber;
 
-    private Integer phoneNumber;
+    private String phoneNumber;
+
+
+    private String aadharPhoto;
+
+
+    private String panPhoto;
+
+   /* @Lob
+    @Column(name = "user_photo", columnDefinition = "LONGBLOB")*/
+    private String  userPhoto;
 
 }

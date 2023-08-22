@@ -1,10 +1,7 @@
 package com.tc.training.smallFinance.model;
 
 import com.tc.training.smallFinance.utils.AccountType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,13 +22,14 @@ public class AccountDetails {
 
     private AccountType accountType = AccountType.Savings;
 
-    private LocalDate openingDate;
+    private LocalDate openingDate ;
 
     private LocalDate closingDate;
 
-    private Long balance;
 
-    private boolean kyc;
+    private Long balance = 0L;
+
+    private Boolean kyc = Boolean.FALSE;
 
     @OneToOne
     @JoinColumn(referencedColumnName = "userId",name="user_Id")

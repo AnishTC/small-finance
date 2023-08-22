@@ -5,16 +5,24 @@ import com.tc.training.smallFinance.dtos.outputs.AccountDetailsOutputDto;
 import com.tc.training.smallFinance.model.AccountDetails;
 import com.tc.training.smallFinance.repository.AccountRepository;
 import com.tc.training.smallFinance.service.AccountServiceDetails;
+import com.tc.training.smallFinance.service.EmailService;
 import com.tc.training.smallFinance.service.UserService;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Random;
 
 @Service
 public class AccountServiceDetailsImpl implements AccountServiceDetails {
+    @Autowired
+    private EmailService emailService;
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
@@ -22,17 +30,25 @@ public class AccountServiceDetailsImpl implements AccountServiceDetails {
     @Autowired
     private UserService userService;
 
-    private static long lastTimestamp = System.currentTimeMillis();
+    private static long lastTimestamp = 10000000000000000L;
+
     private static int sequence = 0;
 
     @Override
     public AccountDetailsOutputDto createAccount(AccountDetailsInputDto accountDetailsInputDto) {
-        userService.addUser(accountDetailsInputDto);
+
         AccountDetails accountDetails = modelMapper.map(accountDetailsInputDto, AccountDetails.class);
+        accountDetails.setUser(userService.addUser(accountDetailsInputDto));
         accountDetails.setAccountNumber(generateUniqueAccountNumber());
+        accountDetails.setOpeningDate(LocalDate.now());
+       /* accountDetails.getUser().setAadharPhoto(encode(accountDetailsInputDto.getAadharPhoto()));
+        accountDetails.getUser().setPanPhoto(encode(accountDetailsInputDto.getPanPhoto()));
+        accountDetails.getUser().setUserPhoto(encode(accountDetailsInputDto.getUserPhoto()));*/
         accountRepository.save(accountDetails) ;
+        sendEmail(accountDetails.getUser().getEmail(),accountDetails.getUser().getPassword(),accountDetails.getAccountNumber());
         return modelMapper.map(accountDetails,AccountDetailsOutputDto.class);
     }
+
     @Override
     public AccountDetailsOutputDto getAccount(Long accNo) {
         AccountDetails accountDetails =  accountRepository.getById(accNo);
@@ -48,18 +64,27 @@ public class AccountServiceDetailsImpl implements AccountServiceDetails {
     }
 
     private synchronized Long generateUniqueAccountNumber() {
-        long currentTimestamp = System.currentTimeMillis();
-
-        if (currentTimestamp == lastTimestamp) {
-            sequence++;
-        } else {
-            sequence = 0;
-            lastTimestamp = currentTimestamp;
-        }
-
-        Long uniqueNumber = (Long) (currentTimestamp % 1000000000L * 10 + sequence) % 1000000000;
-        return uniqueNumber;
+        lastTimestamp++;
+        return lastTimestamp;
     }
+
+    private void sendEmail(String email, String password,Long accountNumber) {
+        String subject = "Username and password for your account";
+        String text = "Thank you for registering with our bank your account number is "+accountNumber+ " and your password is "+password;
+        emailService.sendEmail(email,subject,text);
+    }
+
+    private String encode(MultipartFile file) {
+        String b64="";
+        try {
+            byte[] b = file.getBytes();
+            b64 = Base64.encodeBase64String(b);
+        }
+        catch(IOException e){}
+        return b64;
+    }
+
+
 
 
 }

@@ -1,13 +1,19 @@
 package com.tc.training.smallFinance.dtos.outputs;
 
 import com.tc.training.smallFinance.utils.AccountType;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class AccountDetailsOutputDto {
+
     private Long accountNumber;
-    private String accountHolderName;
+
     private AccountType accountType;
-    private Date oppeningDate;
-    private Date closingDate;
+
+
 }
