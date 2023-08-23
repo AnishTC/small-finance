@@ -5,6 +5,7 @@ import com.tc.training.smallFinance.dtos.outputs.AccountDetailsOutputDto;
 import com.tc.training.smallFinance.model.User;
 import com.tc.training.smallFinance.repository.UserRepository;
 import com.tc.training.smallFinance.service.UserService;
+import jakarta.persistence.Lob;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Random;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -44,19 +46,34 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-
+    @Override
+    public void uploadImage(MultipartFile file1, MultipartFile file2, MultipartFile file3, String userName) {
+        User user = userRepository.findByEmail(userName);
+        user.setAadharPhoto(convertImage(file1));
+        user.setPanPhoto(convertImage(file2));
+        user.setUserPhoto(convertImage(file3));
+        userRepository.save(user);
+    }
 
     @Override
-    public void uploadImage(MultipartFile file,String userName) {
-        User user = userRepository.findById(11L).orElseThrow(()-> new RuntimeException());
+    public byte[] getImage(String userName) {
+        String base = userRepository.findByEmail(userName).getAadharPhoto();
+        byte[] b = Base64.decodeBase64(base);
+        return b;
+    }
+
+    public String convertImage(MultipartFile file) {
+
         String b64="";
+
+        byte[] b;
         try {
-            byte[] b = file.getBytes();
+            b = file.getBytes();
             b64 = Base64.encodeBase64String(b);
         }
         catch(IOException e){}
-        user.setAadharPhoto(b64);
-        userRepository.save(user);
+
+        return b64;
     }
 
 

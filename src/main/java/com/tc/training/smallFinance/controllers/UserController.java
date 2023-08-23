@@ -2,6 +2,7 @@ package com.tc.training.smallFinance.controllers;
 
 import com.tc.training.smallFinance.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,9 +21,14 @@ public class UserController {
     }
 
     @PutMapping("/uploadImage")
-    public ResponseEntity uploadImage(@RequestParam MultipartFile file, @RequestParam String userName) throws IOException {
-        userService.uploadImage(file,userName);
+    public ResponseEntity uploadImage(@RequestParam MultipartFile file1,@RequestParam MultipartFile file2,@RequestParam MultipartFile file3, @RequestParam String userName) throws IOException {
+        userService.uploadImage(file1,file2,file3,userName);
         return ResponseEntity.ok("password successfully changed");
+    }
+
+    @GetMapping(value = "/getImages",produces = MediaType.IMAGE_JPEG_VALUE )
+    public @ResponseBody byte[] getImage(@RequestParam String userName){
+        return userService.getImage(userName);
     }
 
 }

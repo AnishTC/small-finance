@@ -32,14 +32,16 @@ public class User {
 
     private String phoneNumber;
 
-
+    @Lob
+    @Column( columnDefinition = "LONGBLOB")
     private String aadharPhoto;
 
-
+    @Lob
+    @Column( columnDefinition = "LONGBLOB")
     private String panPhoto;
 
-   /* @Lob
-    @Column(name = "user_photo", columnDefinition = "LONGBLOB")*/
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private String  userPhoto;
 
 }
