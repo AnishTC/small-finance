@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ public class AccountDetailsInputDto {
 
     private LocalDate dob;
 
+
     private String aadharCardNumber;
 
     private String panCardNumber;
@@ -32,7 +34,7 @@ public class AccountDetailsInputDto {
     private LocalDate openingDate;
 
     private LocalDate closingDate;
-
+    @UniqueElements
     private String phoneNumber;
 
     @Email

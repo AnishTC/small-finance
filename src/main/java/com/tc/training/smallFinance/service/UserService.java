@@ -12,7 +12,9 @@ public interface UserService {
 
     void updatePassword(String userName, String password);
 
-    void uploadImage(MultipartFile file, String userName);
+    void uploadImage(MultipartFile file1, MultipartFile file2, MultipartFile file3, String userName);
+
+    byte[] getImage(String userName);
 
     //void uploadImage(MultipartFile file);
 }

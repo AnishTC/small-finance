@@ -30,7 +30,7 @@ public class AccountServiceDetailsImpl implements AccountServiceDetails {
     @Autowired
     private UserService userService;
 
-    private static long lastTimestamp = 10000000000000000L;
+    private static long lastTimestamp = 1000000000000000L;
 
     private static int sequence = 0;
 
@@ -46,7 +46,9 @@ public class AccountServiceDetailsImpl implements AccountServiceDetails {
         accountDetails.getUser().setUserPhoto(encode(accountDetailsInputDto.getUserPhoto()));*/
         accountRepository.save(accountDetails) ;
         sendEmail(accountDetails.getUser().getEmail(),accountDetails.getUser().getPassword(),accountDetails.getAccountNumber());
-        return modelMapper.map(accountDetails,AccountDetailsOutputDto.class);
+        AccountDetailsOutputDto outputDto = modelMapper.map(accountDetails,AccountDetailsOutputDto.class);
+        outputDto.setEmail(accountDetails.getUser().getEmail());
+        return outputDto;
     }
 
     @Override

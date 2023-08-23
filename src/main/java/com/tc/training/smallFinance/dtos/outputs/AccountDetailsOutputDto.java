@@ -15,5 +15,7 @@ public class AccountDetailsOutputDto {
 
     private AccountType accountType;
 
+    private String email;
+
 
 }
