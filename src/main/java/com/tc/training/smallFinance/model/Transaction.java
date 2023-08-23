@@ -19,13 +19,17 @@ public class Transaction {
     @Enumerated
     private TransactionType transactionType;
 
-    private String from;
-
-    private String to;
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "accountNumber")
+    private AccountDetails from;
 
     @ManyToOne
     @JoinColumn(referencedColumnName = "accountNumber")
-    private AccountDetails accountNumber;
+    private AccountDetails to;
+//
+//    @ManyToOne
+//    @JoinColumn(referencedColumnName = "accountNumber")
+//    private AccountDetails accountNumber;
 
     private Timestamp timestamp;
 
