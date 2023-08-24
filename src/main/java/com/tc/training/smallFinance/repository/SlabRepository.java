@@ -12,8 +12,8 @@ import java.util.UUID;
 
 @Repository
 public interface SlabRepository extends JpaRepository<Slabs, UUID> {
-    @Query(value = "Select * from Slabs where tenures =1? && typeOfTransaction =2?",nativeQuery = true)
-    public Slabs findslabs(Tenures tenures, TypeOfTransaction typeOfTransaction);
+   // @Query(value = "Select * from Slabs where tenures =1? && typeOfTransaction =2?",nativeQuery = true)
+    public Slabs findByTenuresAndTypeOfTransaction(Tenures tenures, TypeOfTransaction typeOfTransaction);
 
 
 }

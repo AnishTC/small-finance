@@ -25,7 +25,7 @@ public class Slabs {
     @Enumerated
     private Tenures tenures;
 
-    private String IntrestRate;
+    private String interestRate;
 
     @Enumerated
     private TypeOfTransaction typeOfTransaction;

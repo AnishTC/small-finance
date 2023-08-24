@@ -2,6 +2,9 @@ package com.tc.training.smallFinance.service.Impl;
 
 import com.tc.training.smallFinance.dtos.inputs.FixedDepositInputDto;
 import com.tc.training.smallFinance.dtos.outputs.FixedDepositOutputDto;
+import com.tc.training.smallFinance.exception.AccountNotFoundException;
+import com.tc.training.smallFinance.exception.AmountNotSufficientException;
+import com.tc.training.smallFinance.exception.KycNotCompletedException;
 import com.tc.training.smallFinance.model.AccountDetails;
 import com.tc.training.smallFinance.model.FixedDeposit;
 import com.tc.training.smallFinance.repository.AccountRepository;
@@ -27,21 +30,25 @@ public class FixedDepositServiceImpl implements FixedDepositService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public FixedDepositOutputDto createFd(FixedDepositInputDto fixedDepositInputDto) {
+    public FixedDepositOutputDto createFixedDeposit(FixedDepositInputDto fixedDepositInputDto) {
 
         Long amount = fixedDepositInputDto.getAmount();
-        AccountDetails accountNumber = accountRepository.findById(fixedDepositInputDto.getAccountNumber()).orElseThrow(); // add exception
+        AccountDetails accountNumber = accountRepository.findById(fixedDepositInputDto.getAccountNumber()).orElseThrow(()->new AccountNotFoundException("account  not found")); // add exception
         Tenures tenures = Tenures.valueOf(fixedDepositInputDto.getTenures());
+
+        if(accountNumber.getKyc()==Boolean.FALSE) throw new KycNotCompletedException("Complete  your kyc");
+        if(amount>accountNumber.getBalance()) throw new AmountNotSufficientException("amount exceeds account balance");
 
         FixedDeposit fixedDeposit = new FixedDeposit();
         fixedDeposit.setAccountNumber(accountNumber);
         fixedDeposit.setAmount(amount);
-        fixedDeposit.setSlabs(slabRepository.findslabs(tenures, TypeOfTransaction.FD));
+        fixedDeposit.setSlabs(slabRepository.findByTenuresAndTypeOfTransaction(tenures, TypeOfTransaction.FD));
         fixedDeposit.setDepositedDate(LocalDate.now());
         fixedDepositRepository.save(fixedDeposit);
         FixedDepositOutputDto fixedDepositOutputDto=modelMapper.map(fixedDeposit,FixedDepositOutputDto.class);
-        fixedDepositOutputDto.setInterestRate(fixedDeposit.getSlabs().getIntrestRate());
+        fixedDepositOutputDto.setInterestRate(fixedDeposit.getSlabs().getInterestRate());
         return fixedDepositOutputDto;
     }
+
 }
 
