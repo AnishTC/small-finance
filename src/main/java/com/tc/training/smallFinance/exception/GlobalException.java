@@ -25,4 +25,9 @@ public class GlobalException {
     public String handleUserNotFound(UserNotFound userNotFound){
         return userNotFound.getMessage();
     }
+
+    @ExceptionHandler(MyMailException.class)
+    public String handleMyMailException(MyMailException myMailException){
+        return myMailException.getMessage();
+    }
 }

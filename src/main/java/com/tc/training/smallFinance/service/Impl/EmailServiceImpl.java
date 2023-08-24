@@ -1,7 +1,9 @@
 package com.tc.training.smallFinance.service.Impl;
 
+import com.tc.training.smallFinance.exception.MyMailException;
 import com.tc.training.smallFinance.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,13 @@ public class EmailServiceImpl implements EmailService {
         message.setSubject(subject);
         message.setText(body);
 
-        mailSender.send(message);
+       try {
+           mailSender.send(message);
+       }
+       catch(MailException exception) {
+           throw new MyMailException("mail not sent") ;
+
+
+       }
     }
 }

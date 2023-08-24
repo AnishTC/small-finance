@@ -3,6 +3,7 @@ package com.tc.training.smallFinance.service.Impl;
 import com.tc.training.smallFinance.dtos.inputs.TransactionInputDto;
 import com.tc.training.smallFinance.dtos.outputs.TransactionOutputDto;
 import com.tc.training.smallFinance.exception.AccountNotFoundException;
+import com.tc.training.smallFinance.exception.AmountNotSufficientException;
 import com.tc.training.smallFinance.model.AccountDetails;
 import com.tc.training.smallFinance.model.Transaction;
 import com.tc.training.smallFinance.repository.AccountRepository;
@@ -55,6 +56,7 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
         else if(transactionInputDto.getType().equals("TRANSFER")){
+            if(accountDetails.getBalance()< transactionInputDto.getAmount()) throw new AmountNotSufficientException("your transfer amount exceeds yours balance amount");
             transaction.setFrom(accountDetails);
             transaction.setTransactionType(TransactionType.DEBITED);
             transaction.setWhichTransaction(TypeOfTransaction.TRANSFER);

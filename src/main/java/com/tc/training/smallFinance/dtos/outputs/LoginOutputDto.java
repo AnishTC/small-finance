@@ -23,5 +23,7 @@ public class LoginOutputDto {
 
     private Long accNo;
 
+    private Boolean kyc;
+
     private List<TransactionOutputDto> transactions;
 }

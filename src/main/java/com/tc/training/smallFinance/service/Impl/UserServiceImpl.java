@@ -12,6 +12,7 @@ import com.tc.training.smallFinance.model.User;
 import com.tc.training.smallFinance.repository.AccountRepository;
 import com.tc.training.smallFinance.repository.TransactionRepository;
 import com.tc.training.smallFinance.repository.UserRepository;
+import com.tc.training.smallFinance.service.TransactionService;
 import com.tc.training.smallFinance.service.UserService;
 import jakarta.persistence.Lob;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -35,6 +36,8 @@ public class UserServiceImpl implements UserService {
     private AccountRepository accountRepository;
     @Autowired
     private TransactionRepository transactionRepository;
+    @Autowired
+    private TransactionService transactionService;
 
 
 
@@ -92,8 +95,9 @@ public class UserServiceImpl implements UserService {
             loginOutputDto.setPhoneNumber(user.getPhoneNumber());
             loginOutputDto.setBalance(accountDetails.getBalance());
             loginOutputDto.setAccNo(accountDetails.getAccountNumber());
-            /*List<TransactionOutputDto> list = ;
-            loginOutputDto.setTransactions(list);*/
+            loginOutputDto.setKyc(accountDetails.getKyc());
+            List<TransactionOutputDto> list = transactionService.getAllTransactions(null,null, accountDetails.getAccountNumber());
+            loginOutputDto.setTransactions(list);
             return loginOutputDto;
     }
 
