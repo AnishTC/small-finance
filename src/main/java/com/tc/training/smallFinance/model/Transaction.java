@@ -21,27 +21,13 @@ public class Transaction {
     @Enumerated
     private TransactionType transactionType;
 
-//<<<<<<< HEAD
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "accountNumber")
     private AccountDetails from;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "accountNumber")
     private AccountDetails to;
-//
-//    @ManyToOne
-//    @JoinColumn(referencedColumnName = "accountNumber")
-//    private AccountDetails accountNumber;
-////=======
-//    @ManyToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(referencedColumnName = "accountNumber")
-//    private AccountDetails from;
-////>>>>>>> 13ba778dc0231bc9031376c15cf8c3010656d55b
-//
-//    @ManyToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(referencedColumnName = "accountNumber")
-//    private AccountDetails to;
 
    /* @ManyToOne
     @JoinColumn(referencedColumnName = "accountNumber")

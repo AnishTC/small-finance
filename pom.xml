@@ -83,7 +83,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>Spring-boot-aws-exe2</finalName>
 	</build>
 
 </project>
