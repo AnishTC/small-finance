@@ -1,6 +1,7 @@
 package com.tc.training.smallFinance.dtos.outputs;
 
 import com.tc.training.smallFinance.model.Transaction;
+import com.tc.training.smallFinance.utils.Role;
 import lombok.Data;
 import org.hibernate.annotations.Cascade;
 
@@ -25,5 +26,7 @@ public class LoginOutputDto {
 
     private Boolean kyc;
 
-    private List<TransactionOutputDto> transactions;
+    private Role roleName;
+
+   // private List<TransactionOutputDto> transactions;
 }

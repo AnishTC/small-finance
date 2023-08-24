@@ -1,5 +1,6 @@
 package com.tc.training.smallFinance.model;
 
+import com.tc.training.smallFinance.utils.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -43,5 +44,7 @@ public class User {
     @Lob
     @Column(columnDefinition = "LONGBLOB")
     private String  userPhoto;
+
+    private Role roleName = Role.CUSTOMER;
 
 }

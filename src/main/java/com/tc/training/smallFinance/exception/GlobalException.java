@@ -30,4 +30,9 @@ public class GlobalException {
     public String handleMyMailException(MyMailException myMailException){
         return myMailException.getMessage();
     }
+
+    @ExceptionHandler(KycNotCompletedException.class)
+    public String handleKycNotCompletedException(KycNotCompletedException kycNotCompletedException){
+        return kycNotCompletedException.getMessage();
+    }
 }

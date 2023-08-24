@@ -40,6 +40,8 @@ public class AccountDetailsInputDto {
     @Email
     private String email;
 
+
+
    /* private MultipartFile aadharPhoto;
 
     private MultipartFile panPhoto;

@@ -4,6 +4,7 @@ import com.tc.training.smallFinance.dtos.inputs.TransactionInputDto;
 import com.tc.training.smallFinance.dtos.outputs.TransactionOutputDto;
 import com.tc.training.smallFinance.exception.AccountNotFoundException;
 import com.tc.training.smallFinance.exception.AmountNotSufficientException;
+import com.tc.training.smallFinance.exception.KycNotCompletedException;
 import com.tc.training.smallFinance.model.AccountDetails;
 import com.tc.training.smallFinance.model.Transaction;
 import com.tc.training.smallFinance.repository.AccountRepository;
@@ -41,6 +42,8 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setTimestamp(LocalDateTime.now());
         if (transactionInputDto.getPurpose() != null) transaction.setDescription(transactionInputDto.getPurpose());
         AccountDetails accountDetails = accountRepository.findById(accountNumber).orElseThrow(() -> new AccountNotFoundException("Account not found"));
+
+        if(accountDetails.getKyc()==Boolean.FALSE) throw new KycNotCompletedException("complete kyc");
 
         if(transactionInputDto.getType().equals("DEPOSIT")) {
             transaction.setFrom(transaction.getTo());

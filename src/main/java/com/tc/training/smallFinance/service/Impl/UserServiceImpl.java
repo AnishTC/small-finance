@@ -5,6 +5,7 @@ import com.tc.training.smallFinance.dtos.inputs.LoginInputDto;
 import com.tc.training.smallFinance.dtos.outputs.AccountDetailsOutputDto;
 import com.tc.training.smallFinance.dtos.outputs.LoginOutputDto;
 import com.tc.training.smallFinance.dtos.outputs.TransactionOutputDto;
+import com.tc.training.smallFinance.exception.AccountNotFoundException;
 import com.tc.training.smallFinance.exception.UserNotFound;
 import com.tc.training.smallFinance.model.AccountDetails;
 import com.tc.training.smallFinance.model.Transaction;
@@ -83,8 +84,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public LoginOutputDto login(LoginInputDto loginInputDto) {
-
-            User user = userRepository.findByEmail(loginInputDto.getUserName());
+            Long userName = Long.valueOf(loginInputDto.getUserName());
+            User user = accountRepository.findById(userName).get().getUser();
+          //  if (user==null) throw new AccountNotFoundException("Wrong account number");
             if(user==null){ throw new UserNotFound("Incorrect user name"); }
             String pass = user.getPassword();
             if(!pass.equals(loginInputDto.getPassword())) throw new UserNotFound("Incorrect password");
@@ -96,8 +98,9 @@ public class UserServiceImpl implements UserService {
             loginOutputDto.setBalance(accountDetails.getBalance());
             loginOutputDto.setAccNo(accountDetails.getAccountNumber());
             loginOutputDto.setKyc(accountDetails.getKyc());
-            List<TransactionOutputDto> list = transactionService.getAllTransactions(null,null, accountDetails.getAccountNumber());
-            loginOutputDto.setTransactions(list);
+            loginOutputDto.setRoleName(accountDetails.getUser().getRoleName());
+           // List<TransactionOutputDto> list = transactionService.getAllTransactions(null,null, accountDetails.getAccountNumber());
+           // loginOutputDto.setTransactions(list);
             return loginOutputDto;
     }
 
