@@ -1,8 +1,16 @@
 package com.tc.training.smallFinance.service.Impl;
 
 import com.tc.training.smallFinance.dtos.inputs.AccountDetailsInputDto;
+import com.tc.training.smallFinance.dtos.inputs.LoginInputDto;
 import com.tc.training.smallFinance.dtos.outputs.AccountDetailsOutputDto;
+import com.tc.training.smallFinance.dtos.outputs.LoginOutputDto;
+import com.tc.training.smallFinance.dtos.outputs.TransactionOutputDto;
+import com.tc.training.smallFinance.exception.UserNotFound;
+import com.tc.training.smallFinance.model.AccountDetails;
+import com.tc.training.smallFinance.model.Transaction;
 import com.tc.training.smallFinance.model.User;
+import com.tc.training.smallFinance.repository.AccountRepository;
+import com.tc.training.smallFinance.repository.TransactionRepository;
 import com.tc.training.smallFinance.repository.UserRepository;
 import com.tc.training.smallFinance.service.UserService;
 import jakarta.persistence.Lob;
@@ -15,6 +23,7 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -22,6 +31,13 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
+    private TransactionRepository transactionRepository;
+
+
+
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
 
 
@@ -60,6 +76,25 @@ public class UserServiceImpl implements UserService {
         String base = userRepository.findByEmail(userName).getAadharPhoto();
         byte[] b = Base64.decodeBase64(base);
         return b;
+    }
+
+    @Override
+    public LoginOutputDto login(LoginInputDto loginInputDto) {
+
+            User user = userRepository.findByEmail(loginInputDto.getUserName());
+            if(user==null){ throw new UserNotFound("Incorrect user name"); }
+            String pass = user.getPassword();
+            if(!pass.equals(loginInputDto.getPassword())) throw new UserNotFound("Incorrect password");
+             AccountDetails accountDetails = accountRepository.findByUser(user);
+            LoginOutputDto loginOutputDto = new LoginOutputDto();
+            loginOutputDto.setFirstName(user.getFirstName());
+            loginOutputDto.setLastName(user.getLastName());
+            loginOutputDto.setPhoneNumber(user.getPhoneNumber());
+            loginOutputDto.setBalance(accountDetails.getBalance());
+            loginOutputDto.setAccNo(accountDetails.getAccountNumber());
+            /*List<TransactionOutputDto> list = ;
+            loginOutputDto.setTransactions(list);*/
+            return loginOutputDto;
     }
 
     public String convertImage(MultipartFile file) {

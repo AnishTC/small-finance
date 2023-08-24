@@ -4,8 +4,10 @@ import com.tc.training.smallFinance.utils.TransactionType;
 import com.tc.training.smallFinance.utils.TypeOfTransaction;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.Cascade;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.UUID;
 @Data
 @Entity
@@ -19,15 +21,19 @@ public class Transaction {
     @Enumerated
     private TransactionType transactionType;
 
-    private String from;
-
-    private String to;
-
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "accountNumber")
-    private AccountDetails accountNumber;
+    private AccountDetails from;
 
-    private Timestamp timestamp;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "accountNumber")
+    private AccountDetails to;
+
+   /* @ManyToOne
+    @JoinColumn(referencedColumnName = "accountNumber")
+    private AccountDetails accountNumber;*/
+
+    private LocalDateTime timestamp;
 
     @Enumerated
     private TypeOfTransaction  whichTransaction;
