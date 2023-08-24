@@ -1,10 +1,9 @@
 package com.tc.training.smallFinance.dtos.outputs;
 
-import com.tc.training.smallFinance.model.AccountDetails;
 import lombok.Data;
 
 @Data
-public class FdOutputDto {
+public class FixedDepositOutputDto {
     private Long amount;
 
     private String interestRate;

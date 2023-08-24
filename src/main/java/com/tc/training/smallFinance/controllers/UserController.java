@@ -1,5 +1,7 @@
 package com.tc.training.smallFinance.controllers;
 
+import com.tc.training.smallFinance.dtos.inputs.LoginInputDto;
+import com.tc.training.smallFinance.dtos.outputs.LoginOutputDto;
 import com.tc.training.smallFinance.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -29,6 +31,11 @@ public class UserController {
     @GetMapping(value = "/getImages",produces = MediaType.IMAGE_JPEG_VALUE )
     public @ResponseBody byte[] getImage(@RequestParam String userName){
         return userService.getImage(userName);
+    }
+
+    @PostMapping("/login")
+    public LoginOutputDto login(@RequestBody LoginInputDto loginInputDto){
+        return userService.login(loginInputDto);
     }
 
 }

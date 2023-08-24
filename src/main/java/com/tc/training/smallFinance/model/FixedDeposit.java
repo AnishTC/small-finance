@@ -26,7 +26,7 @@ public class FixedDeposit {
 
     @OneToOne
     @JoinColumn(referencedColumnName = "slabId")
-    private Tenures tenures;
+    private Slabs slabs;
 
     private Long amount;
 

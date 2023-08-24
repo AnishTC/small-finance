@@ -17,5 +17,7 @@ public class AccountDetailsOutputDto {
 
     private String email;
 
+    private Long balance;
+
 
 }
