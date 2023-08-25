@@ -19,13 +19,13 @@ public class UserController {
     @PutMapping("/updatePassword")
     public ResponseEntity updatePassword(@RequestParam String userName, @RequestParam  String password){
         userService.updatePassword(userName,password);
-        return ResponseEntity.ok("password successfully changed");
+        return ResponseEntity.ok("Password Successfully Changed");
     }
 
     @PutMapping("/uploadImage")
     public ResponseEntity uploadImage(@RequestParam MultipartFile file1,@RequestParam MultipartFile file2,@RequestParam MultipartFile file3, @RequestParam String userName) throws IOException {
         userService.uploadImage(file1,file2,file3,userName);
-        return ResponseEntity.ok("password successfully changed");
+        return ResponseEntity.ok("Images Successfully Saved");
     }
 
     @GetMapping(value = "/getImages",produces = MediaType.IMAGE_JPEG_VALUE )

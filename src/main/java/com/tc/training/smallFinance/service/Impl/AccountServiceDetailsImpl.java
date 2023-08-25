@@ -36,7 +36,6 @@ public class AccountServiceDetailsImpl implements AccountServiceDetails {
 
     @Override
     public AccountDetailsOutputDto createAccount(AccountDetailsInputDto accountDetailsInputDto) {
-
         AccountDetails accountDetails = modelMapper.map(accountDetailsInputDto, AccountDetails.class);
         accountDetails.setUser(userService.addUser(accountDetailsInputDto));
         accountDetails.setAccountNumber(generateUniqueAccountNumber());

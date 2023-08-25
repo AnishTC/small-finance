@@ -26,7 +26,6 @@ public class AccountDetails {
 
     private LocalDate closingDate;
 
-
     private Long balance = 0L;
 
     private Boolean kyc = Boolean.FALSE;
