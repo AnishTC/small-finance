@@ -42,12 +42,4 @@ public class AccountDetailsInputDto {
 
 
 
-   /* private MultipartFile aadharPhoto;
-
-    private MultipartFile panPhoto;
-
-    private MultipartFile  userPhoto;
-*/
-
-
 }

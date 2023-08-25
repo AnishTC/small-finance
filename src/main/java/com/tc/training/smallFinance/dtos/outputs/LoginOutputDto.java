@@ -16,11 +16,11 @@ public class LoginOutputDto {
 
     private String phoneNumber;
 
-    private Long balance;
+    private Double balance;
 
-    private Long loanAmount = 0L;
+    private Double loanAmount = 0D;
 
-    private Long depositAmount=0L;
+    private Double depositAmount=0D;
 
     private Long accNo;
 

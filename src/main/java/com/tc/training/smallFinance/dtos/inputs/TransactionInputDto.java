@@ -10,7 +10,7 @@ public class TransactionInputDto {
 
     private String to;
 
-    private Long amount;
+    private Double amount;
 
     private String purpose;
 

@@ -43,7 +43,7 @@ public class TransactionServiceImpl implements TransactionService {
         if (transactionInputDto.getPurpose() != null) transaction.setDescription(transactionInputDto.getPurpose());
         AccountDetails accountDetails = accountRepository.findById(accountNumber).orElseThrow(() -> new AccountNotFoundException("Account not found"));
 
-        if(accountDetails.getKyc()==Boolean.FALSE) throw new KycNotCompletedException("complete kyc");
+        if(accountDetails.getKyc()==Boolean.FALSE) throw new KycNotCompletedException("kyc not completed");
 
         if(transactionInputDto.getType().equals("DEPOSIT")) {
             transaction.setFrom(transaction.getTo());
@@ -74,6 +74,7 @@ public class TransactionServiceImpl implements TransactionService {
         transactionOutputDto.setAmount(transaction.getAmount());
         transactionOutputDto.setFromAccountNumber(transaction.getFrom().getAccountNumber());
         transactionOutputDto.setToAccountNumber(transaction.getTo().getAccountNumber());
+        transactionOutputDto.setBalance(accountDetails.getBalance());
         return transactionOutputDto;
     }
 

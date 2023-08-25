@@ -14,10 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.security.SecureRandom;
 import java.time.LocalDate;
-import java.time.Period;
-import java.util.Random;
 
 @Service
 public class AccountServiceDetailsImpl implements AccountServiceDetails {
@@ -55,6 +52,11 @@ public class AccountServiceDetailsImpl implements AccountServiceDetails {
     public AccountDetailsOutputDto getAccount(Long accNo) {
         AccountDetails accountDetails =  accountRepository.getById(accNo);
         return modelMapper.map(accountDetails,AccountDetailsOutputDto.class);
+    }
+
+    @Override
+    public Double getBalance(Long accNo) {
+        return accountRepository.findById(accNo).get().getBalance();
     }
 
     public AccountDetailsOutputDto updateAccount(AccountDetailsInputDto accountDetailsInputDto, Long accountNumber){
