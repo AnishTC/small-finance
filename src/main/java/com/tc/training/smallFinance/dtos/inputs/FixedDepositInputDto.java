@@ -15,5 +15,5 @@ public class FixedDepositInputDto {
 
     private String tenures;
 
-    private Long amount;
+    private Double amount;
 }

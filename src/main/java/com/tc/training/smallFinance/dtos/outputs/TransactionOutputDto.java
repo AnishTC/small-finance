@@ -15,7 +15,7 @@ public class TransactionOutputDto {
 
     private UUID transactionID;
 
-    private Long amount;
+    private Double amount;
 
     private TransactionType transactionType;
 
@@ -26,6 +26,8 @@ public class TransactionOutputDto {
     private LocalDateTime timestamp;
 
     private TypeOfTransaction whichTransaction;
+
+    private Double balance;
 
     private String description = "The "+amount+" has been "+transactionType+" for "+whichTransaction;
 

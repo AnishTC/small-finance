@@ -28,4 +28,6 @@ public class TransactionController {
         LocalDateTime localDateTime2= LocalDateTime.of(date2, LocalTime.of(23,59,59));*/
         return transactionService.getAllTransactions(date1,date2,accNo);
     }
+
+
 }

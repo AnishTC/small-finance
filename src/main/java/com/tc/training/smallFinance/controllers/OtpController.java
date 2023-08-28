@@ -12,6 +12,7 @@ public class OtpController {
     @Autowired
     private OtpService otpService;
 
+    @PostMapping("/sendOtp")
     public ResponseEntity sendOtp(@RequestParam OtpInputDto otpInputDto){
 
         otpService.sendOtp(otpInputDto);

@@ -46,4 +46,6 @@ public class User {
 
     private Role roleName = Role.CUSTOMER;
 
+    private String firebaseId;
+
 }
