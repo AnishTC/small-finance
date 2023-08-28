@@ -25,7 +25,6 @@ public class EmailServiceImpl implements EmailService {
        catch(MailException exception) {
            throw new MyMailException("mail not sent") ;
 
-
        }
     }
 }
