@@ -40,6 +40,4 @@ public class AccountDetailsInputDto {
     @Email
     private String email;
 
-
-
 }

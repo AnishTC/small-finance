@@ -46,6 +46,7 @@ public class User {
 
     private Role roleName = Role.CUSTOMER;
 
+<<<<<<< HEAD
     @Lob
     @Column( columnDefinition = "BLOB")
     private String salarySlip;
@@ -53,5 +54,8 @@ public class User {
     @Lob
     @Column( columnDefinition = "BLOB")
     private String homeSlip;
+=======
+    private String firebaseId;
+>>>>>>> 813167e127b57ac0a3b1e2e1f51798fe7fabd7ab
 
 }

@@ -1,11 +1,16 @@
 package com.tc.training.smallFinance.service.Impl;
 
+import com.google.firebase.auth.UserRecord;
 import com.tc.training.smallFinance.dtos.inputs.AccountDetailsInputDto;
+import com.tc.training.smallFinance.dtos.inputs.FirebaseUserInputDto;
+
 import com.tc.training.smallFinance.dtos.outputs.AccountDetailsOutputDto;
 import com.tc.training.smallFinance.model.AccountDetails;
+import com.tc.training.smallFinance.model.User;
 import com.tc.training.smallFinance.repository.AccountRepository;
 import com.tc.training.smallFinance.service.AccountServiceDetails;
 import com.tc.training.smallFinance.service.EmailService;
+import com.tc.training.smallFinance.service.FirebaseUserService;
 import com.tc.training.smallFinance.service.UserService;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.modelmapper.ModelMapper;
@@ -14,7 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.time.LocalDate;
+import java.util.Random;
+
+
 
 @Service
 public class AccountServiceDetailsImpl implements AccountServiceDetails {
@@ -26,6 +35,8 @@ public class AccountServiceDetailsImpl implements AccountServiceDetails {
     private ModelMapper modelMapper;
     @Autowired
     private UserService userService;
+    @Autowired
+    private FirebaseUserService firebaseUserService;
 
     private static long lastTimestamp = 1000000000000000L;
 
@@ -33,7 +44,6 @@ public class AccountServiceDetailsImpl implements AccountServiceDetails {
 
     @Override
     public AccountDetailsOutputDto createAccount(AccountDetailsInputDto accountDetailsInputDto) {
-
         AccountDetails accountDetails = modelMapper.map(accountDetailsInputDto, AccountDetails.class);
         accountDetails.setUser(userService.addUser(accountDetailsInputDto));
         accountDetails.setAccountNumber(generateUniqueAccountNumber());
@@ -41,12 +51,53 @@ public class AccountServiceDetailsImpl implements AccountServiceDetails {
        /* accountDetails.getUser().setAadharPhoto(encode(accountDetailsInputDto.getAadharPhoto()));
         accountDetails.getUser().setPanPhoto(encode(accountDetailsInputDto.getPanPhoto()));
         accountDetails.getUser().setUserPhoto(encode(accountDetailsInputDto.getUserPhoto()));*/
-        accountRepository.save(accountDetails) ;
+       // accountRepository.save(accountDetails) ;
         sendEmail(accountDetails.getUser().getEmail(),accountDetails.getUser().getPassword(),accountDetails.getAccountNumber());
         AccountDetailsOutputDto outputDto = modelMapper.map(accountDetails,AccountDetailsOutputDto.class);
         outputDto.setEmail(accountDetails.getUser().getEmail());
-        return outputDto;
+
+
+     //   AccountDetails accountDetails1 =modelMapper.map(accountDetails,AccountDetails.class);
+        FirebaseUserInputDto inputDto = new FirebaseUserInputDto();
+        inputDto.setAccountNumber(String.valueOf(accountDetails.getAccountNumber()));
+//        inputDto.setAccountNumber(accountDetails.getAccountNumber());
+        inputDto.setName(accountDetails.getUser().getFirstName());
+        inputDto.setPassword(accountDetails.getUser().getPassword());
+
+        UserRecord userInFireBase = firebaseUserService.createUserInFireBase(inputDto);
+        accountDetails.getUser().setFirebaseId(userInFireBase.getUid());
+        accountDetails =accountRepository.save(accountDetails);
+        AccountDetailsOutputDto accountDetailsOutputDto =  modelMapper.map(accountDetails,AccountDetailsOutputDto.class);
+        accountDetailsOutputDto.setEmail(accountDetails.getUser().getEmail());
+        return accountDetailsOutputDto;
     }
+
+
+
+//    User user1 = modelMapper.map(user, User.class);
+
+//    FirebaseUserInputDto inputDto = new FirebaseUserInputDto();
+
+//inputDto.setEmail(user1.getEmail()); //setting the login details given by the user to the firebase inputDto
+
+//inputDto.setName(user1.getName());
+
+//    String randomPassword = RandomStringUtils.randomAlphanumeric(9); //generating a random password of length 9 characters
+//log.info(randomPassword);
+//inputDto.setPassword(randomPassword);
+//
+//    UserRecord userInFireBase = firebaseUserService.createUserInFireBase(inputDto);
+//user1.setFirebaseId(userInFireBase.getUid()); //creating user in firebase
+//    user1 = userRepository.save(user1);
+//return modelMapper.map(user1, UserOutputDto.class);
+
+
+
+
+
+
+
+
 
     @Override
     public AccountDetailsOutputDto getAccount(Long accNo) {

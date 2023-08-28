@@ -28,5 +28,11 @@ public class LoginOutputDto {
 
     private Role roleName;
 
+    private String accessToken;
+
+    private String refreshToken;
+
+    private String expiresIn;
+
    // private List<TransactionOutputDto> transactions;
 }
