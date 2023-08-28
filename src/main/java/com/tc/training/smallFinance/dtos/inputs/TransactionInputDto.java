@@ -18,6 +18,8 @@ public class TransactionInputDto {
 
     private String type;
 
+    private String trans;
+
 
 
 

@@ -20,7 +20,7 @@ public class FixedDepositController {
         return fixedDepositService.createFixedDeposit(fixedDepositInputDto);
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/getAllByUser")
     public List<FixedDepositOutputDto> getAllFixedDeposit(@RequestParam Long accNo){
         return fixedDepositService.getAllFixedDeposit(accNo);
     }
@@ -34,6 +34,11 @@ public class FixedDepositController {
     public FixedDepositOutputDto breakFixedDeposit(@RequestParam String id){
 
         return fixedDepositService.breakFixedDeposit(id);
+    }
+
+    @GetMapping("/getAll")
+    public List<FixedDepositOutputDto> getAll(){
+       return fixedDepositService.getAll();
     }
 
 }

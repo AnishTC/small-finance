@@ -19,9 +19,9 @@ public class TransactionOutputDto {
 
     private TransactionType transactionType;
 
-    private Long fromAccountNumber;
+    private String fromAccountNumber;
 
-    private Long toAccountNumber;
+    private String toAccountNumber;
 
     private LocalDateTime timestamp;
 

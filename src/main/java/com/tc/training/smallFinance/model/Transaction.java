@@ -37,4 +37,6 @@ public class Transaction {
 
     private String description = "The "+amount+" has been "+transactionType+" for "+whichTransaction;
 
+    private Double balance;
+
 }

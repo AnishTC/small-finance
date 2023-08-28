@@ -46,4 +46,12 @@ public class User {
 
     private Role roleName = Role.CUSTOMER;
 
+    @Lob
+    @Column( columnDefinition = "BLOB")
+    private String salarySlip;
+
+    @Lob
+    @Column( columnDefinition = "BLOB")
+    private String homeSlip;
+
 }

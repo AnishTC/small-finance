@@ -13,6 +13,7 @@ import com.tc.training.smallFinance.model.Slabs;
 import com.tc.training.smallFinance.repository.AccountRepository;
 import com.tc.training.smallFinance.repository.FixedDepositRepository;
 import com.tc.training.smallFinance.repository.SlabRepository;
+import com.tc.training.smallFinance.service.AccountServiceDetails;
 import com.tc.training.smallFinance.service.FixedDepositService;
 import com.tc.training.smallFinance.service.TransactionService;
 import com.tc.training.smallFinance.utils.Tenures;
@@ -22,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -41,6 +43,8 @@ public class FixedDepositServiceImpl implements FixedDepositService {
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
+    private AccountServiceDetails accountServiceDetails;
+    @Autowired
     private SlabRepository slabRepository;
     @Autowired
     private TransactionService transactionService;
@@ -53,6 +57,7 @@ public class FixedDepositServiceImpl implements FixedDepositService {
 
         Double amount = fixedDepositInputDto.getAmount();
         AccountDetails accountNumber = accountRepository.findById(fixedDepositInputDto.getAccountNumber()).orElseThrow(()->new AccountNotFoundException("account  not found")); // add exception
+        //AccountDetails acc = accountServiceDetails.getAccount(fixedDepositInputDto.getAccountNumber());
         Tenures tenures = Tenures.valueOf(fixedDepositInputDto.getTenures());
 
         if(accountNumber.getKyc()==Boolean.FALSE) throw new KycNotCompletedException("Complete  your kyc");
@@ -69,7 +74,7 @@ public class FixedDepositServiceImpl implements FixedDepositService {
         FixedDepositOutputDto fixedDepositOutputDto = modelMapper.map(fixedDeposit,FixedDepositOutputDto.class);
         fixedDepositOutputDto.setInterestRate(fixedDeposit.getSlabs().getInterestRate());
 
-        performTransaction(fixedDeposit);
+        performTransaction(fixedDeposit,"DEBIT");
 
         return fixedDepositOutputDto;
     }
@@ -85,8 +90,7 @@ public class FixedDepositServiceImpl implements FixedDepositService {
 
     @Override
     public List<FixedDepositOutputDto> getAllFixedDeposit(Long accNo) {
-        AccountDetails accountDetails = accountRepository.findById(accNo).orElseThrow(()->new AccountNotFoundException("No account found"));
-        return fixedDepositRepository.findByAccountNumber(accountDetails.getAccountNumber()).stream().map(fd->modelMapper.map(fd, FixedDepositOutputDto.class)).collect(Collectors.toList());
+        return fixedDepositRepository.findByAccountNumber(accNo).stream().map(fd->modelMapper.map(fd, FixedDepositOutputDto.class)).collect(Collectors.toList());
     }
 
     @Override
@@ -122,12 +126,12 @@ public class FixedDepositServiceImpl implements FixedDepositService {
         }
         else if(period.getMonths()>3 && period.getMonths()<6 && period.getYears()==0){
             interest = slabRepository.findByTenuresAndTypeOfTransaction(Tenures.THREE_MONTHS,TypeOfTransaction.FD).getInterestRate();
-            interest = String.valueOf(Double.valueOf(interest)-1L);
+            interest = String.valueOf(Double.valueOf(interest)-1D);
             interestAmount = (fd.getAmount() * Double.valueOf(interest) * (period.getMonths())/3)/100;
         }
         else if(period.getMonths()>6 && period.getYears()==0){
             interest = slabRepository.findByTenuresAndTypeOfTransaction(Tenures.SIX_MONTHS,TypeOfTransaction.FD).getInterestRate();
-            interest = String.valueOf(Double.valueOf(interest)-1L);
+            interest = String.valueOf(Double.valueOf(interest)-1D);
             interestAmount = (fd.getAmount() * Double.valueOf(interest) * (period.getMonths())/6)/100;
         }
 
@@ -137,7 +141,7 @@ public class FixedDepositServiceImpl implements FixedDepositService {
         fd.setTotalAmount(fd.getAmount()+interestAmount);
         closeAccount(fd);
 
-        performTransaction(fd);
+        performTransaction(fd,"CREDIT");
 
         FixedDepositOutputDto fixedDepositOutputDto = modelMapper.map(fd,FixedDepositOutputDto.class);
         fixedDepositOutputDto.setInterestRate(interest);
@@ -145,15 +149,21 @@ public class FixedDepositServiceImpl implements FixedDepositService {
         return fixedDepositOutputDto;
     }
 
-    private void performTransaction(FixedDeposit fd) {
+    @Override
+    public List<FixedDepositOutputDto> getAll() {
+        return null;
+    }
+
+
+    private void performTransaction(FixedDeposit fd,String type) {
 
         TransactionInputDto transactionInputDto = new TransactionInputDto();
         transactionInputDto.setAmount(fd.getTotalAmount());
         transactionInputDto.setTo(String.valueOf(fd.getAccountNumber().getAccountNumber()));
         transactionInputDto.setAccountNumber(String.valueOf(fd.getAccountNumber().getAccountNumber()));
         transactionInputDto.setType("FD");
-        transactionInputDto.setPurpose("FD amount credited");
-
+        transactionInputDto.setPurpose("FD amount "+type);
+        transactionInputDto.setTrans(type);
         transactionService.deposit(transactionInputDto,fd.getAccountNumber().getAccountNumber());
 
     }
@@ -163,9 +173,11 @@ public class FixedDepositServiceImpl implements FixedDepositService {
         fixedDepositRepository.save(fd);
     }
 
-    @Scheduled(cron = "*/10 0 0 * * *")
+    @Scheduled(cron = "0 0 0 * * *")
     public void mature(){
-        System.out.println("working");
+
+        logger.info("performing scheduled task");
+
         List<FixedDeposit> list = fixedDepositRepository.findAllByIsActive();
         LocalDate now = LocalDate.now();
 
@@ -176,8 +188,10 @@ public class FixedDepositServiceImpl implements FixedDepositService {
 
         }
     }
-
+    @Async
     public void maturedAccount(FixedDeposit fd){
+
+
 
         String interest = fd.getSlabs().getInterestRate();
         Double interestAmount = (fd.getAmount() * Double.valueOf(interest) * 1)/100;
@@ -186,7 +200,9 @@ public class FixedDepositServiceImpl implements FixedDepositService {
         fd.setTotalAmount(fd.getAmount()+interestAmount);
         closeAccount(fd);
 
-        performTransaction(fd);
+        performTransaction(fd,"credited");
+
+        logger.info("fixed deposit with id "+fd.getFdId()+" is matured");
 
     }
 

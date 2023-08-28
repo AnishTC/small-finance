@@ -13,9 +13,16 @@ public class OtpController {
     private OtpService otpService;
 
     @PostMapping("/sendOtp")
-    public ResponseEntity sendOtp(@RequestParam OtpInputDto otpInputDto){
+    public ResponseEntity sendOtp(@RequestBody OtpInputDto otpInputDto){
 
         otpService.sendOtp(otpInputDto);
         return ResponseEntity.ok("otp sent");
+    }
+
+    @PostMapping("/verifyOtp")
+    public ResponseEntity verifyOtp(@RequestBody OtpInputDto otpInputDto){
+
+       return  otpService.verifyOtp(otpInputDto);
+
     }
 }

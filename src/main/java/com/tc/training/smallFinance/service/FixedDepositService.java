@@ -16,5 +16,9 @@ public interface FixedDepositService {
     FDDetails getFDDetails(Long accNo);
 
     FixedDepositOutputDto breakFixedDeposit(String id);
+
+
+
+    List<FixedDepositOutputDto> getAll();
 //    public FdOutputDto createFd(FdInputDto fdInputDto);
 }

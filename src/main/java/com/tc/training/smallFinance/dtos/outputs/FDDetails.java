@@ -7,6 +7,10 @@ public class FDDetails {
 
     private Double totalFdAmount;
 
+    private Double totalRdAmount;
+
+    private Integer totalNoOfRD;
+
     private Integer totalNoOfFD;
 
 
