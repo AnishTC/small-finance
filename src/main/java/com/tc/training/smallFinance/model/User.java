@@ -1,5 +1,6 @@
 package com.tc.training.smallFinance.model;
 
+import com.tc.training.smallFinance.utils.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -9,7 +10,6 @@ import java.util.UUID;
 @Data
 @Entity
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID userId;
@@ -43,5 +43,17 @@ public class User {
     @Lob
     @Column(columnDefinition = "LONGBLOB")
     private String  userPhoto;
+
+    private Role roleName = Role.CUSTOMER;
+
+    @Lob
+    @Column( columnDefinition = "BLOB")
+    private String salarySlip;
+
+    @Lob
+    @Column( columnDefinition = "BLOB")
+    private String homeSlip;
+
+    private String firebaseId;
 
 }

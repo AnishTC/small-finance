@@ -26,14 +26,16 @@ public class AccountDetails {
 
     private LocalDate closingDate;
 
+//<<<<<<< HEAD
+//=======
 
-    private Long balance = 0L;
+    private Double balance = 0D;
+//>>>>>>> 751637a6a9a5756d549b84e369c5b386bab3a6ee
 
     private Boolean kyc = Boolean.FALSE;
 
     @OneToOne
     @JoinColumn(referencedColumnName = "userId",name="user_Id")
     private User user;
-
 
 }

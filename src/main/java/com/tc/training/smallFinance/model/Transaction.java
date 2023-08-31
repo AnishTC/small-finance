@@ -16,22 +16,19 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID transactionID;
 
-    private Long amount;
+    private Double amount;
 
     @Enumerated
     private TransactionType transactionType;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+//<<<<<<< HEAD
+    @ManyToOne
     @JoinColumn(referencedColumnName = "accountNumber")
     private AccountDetails from;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(referencedColumnName = "accountNumber")
     private AccountDetails to;
-
-   /* @ManyToOne
-    @JoinColumn(referencedColumnName = "accountNumber")
-    private AccountDetails accountNumber;*/
 
     private LocalDateTime timestamp;
 
@@ -39,5 +36,7 @@ public class Transaction {
     private TypeOfTransaction  whichTransaction;
 
     private String description = "The "+amount+" has been "+transactionType+" for "+whichTransaction;
+
+    private Double balance;
 
 }

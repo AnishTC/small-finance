@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class OtpInputDto {
 
-    private String otp;
+    private Long otp;
 
     private Long accountNumber;
 }
