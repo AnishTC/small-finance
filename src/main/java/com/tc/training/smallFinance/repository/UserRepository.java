@@ -15,6 +15,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     User findByAccountNumber(String accountNumber);
     @Query(value = "select * from user e where e.first_name = ?1",nativeQuery = true)
     User findByName(String userName);
-    @Query(value = "select * from user e where e.firebase_id",nativeQuery = true)
+    @Query(value = "select * from user e where e.firebase_id = ?1",nativeQuery = true)
     User findByFirebaseId(String user_id);
 }
