@@ -7,13 +7,12 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AccountRepository extends JpaRepository<AccountDetails,Long> {
-<<<<<<< HEAD
-
-    AccountDetails findByUser(User user);
-=======
 
 
     AccountDetails findByUser(User user);
 
->>>>>>> Anish
+
+
+
+
 }

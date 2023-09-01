@@ -70,6 +70,7 @@ public class FixedDepositServiceImpl implements FixedDepositService {
         fixedDeposit.setDepositedDate(LocalDate.now());
         fixedDeposit.setMaturityDate(getOverDate(fixedDeposit.getSlabs(),fixedDeposit.getDepositedDate()));
         fixedDeposit.setTotalAmount(amount);
+        fixedDeposit.setInterestRate(fixedDeposit.getSlabs().getInterestRate());
        // fixedDeposit.getTransactionIds().add();
         performTransaction(fixedDeposit,"DEBIT");
         fixedDepositRepository.save(fixedDeposit);

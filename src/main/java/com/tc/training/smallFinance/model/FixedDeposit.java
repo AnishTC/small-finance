@@ -30,6 +30,8 @@ public class FixedDeposit {
     @JoinColumn(referencedColumnName = "slabId")
     private Slabs slabs;
 
+    private String interestRate;
+
     private Double amount;
 
     private LocalDate depositedDate;

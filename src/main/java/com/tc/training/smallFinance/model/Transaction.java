@@ -28,13 +28,12 @@ public class Transaction {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "accountNumber")
     private AccountDetails to;
-<<<<<<< HEAD
+
 
    /* @ManyToOne
     @JoinColumn(referencedColumnName = "accountNumber")
     private AccountDetails accountNumber;*/
-=======
->>>>>>> Anish
+
 
     private LocalDateTime timestamp;
 
