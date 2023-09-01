@@ -15,6 +15,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +30,12 @@ import java.util.List;
 
 @Component
 @Log4j2
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class SecurityFilter extends OncePerRequestFilter {
 
     @Autowired
-    private final UserService userService;
+    private UserService userService;
 
     @Autowired
     private RoleAndPermissionService roleAndPermissionService;

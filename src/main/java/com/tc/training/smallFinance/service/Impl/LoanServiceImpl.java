@@ -91,6 +91,12 @@ public class LoanServiceImpl implements LoanService {
         Loan loan = loanRepository.findById(id).orElseThrow(()->new AccountNotFoundException("loan account not found"));
         LoanOutputDto lout = modelMapper.map(loan, LoanOutputDto.class);
         lout.setTenure(loan.getSlab().getTenures().toString());
+        lout.setDob(loan.getAccount().getUser().getDob());
+        lout.setAge(loan.getAccount().getUser().getAge());
+        lout.setEmail(loan.getAccount().getUser().getEmail());
+        lout.setFirstName(loan.getAccount().getUser().getFirstName());
+        lout.setLastName(loan.getAccount().getUser().getLastName());
+
         return lout;
     }
 
@@ -223,6 +229,7 @@ public class LoanServiceImpl implements LoanService {
         Loan loan = loanRepository.findById(id).orElseThrow(()->new AccountNotFoundException("account with this id  "));
         loan.setLoanSuppliment1(userService.uploadPic(file1));
         loan.setLoanSuppliment2(userService.uploadPic(file2));
+        loanRepository.save(loan);
     }
 
     @Override

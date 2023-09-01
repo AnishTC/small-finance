@@ -44,4 +44,15 @@ public class LoanOutputDto {
 
     private String loanSuppliment2;
 
+    private String firstName;
+
+    private String lastName;
+
+    private LocalDate dob;
+
+    private Integer age;
+
+    private String email;
+
+
 }

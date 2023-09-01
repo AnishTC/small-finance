@@ -131,7 +131,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserOutputDto> getAll() {
-        List<User> userList =   userRepository.findAll();
+        List<User> userList =   userRepository.findByCustomer();
         List<UserOutputDto> list =  new ArrayList<>();
         for(User user : userList){
             UserOutputDto userOutputDto = new UserOutputDto();
