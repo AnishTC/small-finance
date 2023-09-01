@@ -20,17 +20,14 @@ public class AccountDetails {
     @Id
     private Long accountNumber;
 
+
     private AccountType accountType = AccountType.Savings;
 
     private LocalDate openingDate ;
 
     private LocalDate closingDate;
 
-//<<<<<<< HEAD
-//=======
-
     private Double balance = 0D;
-//>>>>>>> 751637a6a9a5756d549b84e369c5b386bab3a6ee
 
     private Boolean kyc = Boolean.FALSE;
 

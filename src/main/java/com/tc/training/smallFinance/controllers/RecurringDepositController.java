@@ -42,4 +42,8 @@ public class RecurringDepositController {
     public Double getTotalMoneyInvested(@RequestParam Long accNo){
         return recurringDepositService.getTotalMoneyInvested(accNo);
     }
+    @GetMapping("getByStatus")
+    public List<RecurringDepositOutputDto> getByStatus(@RequestParam Long accNo){
+        return recurringDepositService.getByStatus(accNo);
+    }
 }

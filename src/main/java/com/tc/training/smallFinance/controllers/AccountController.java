@@ -2,6 +2,7 @@ package com.tc.training.smallFinance.controllers;
 
 import com.tc.training.smallFinance.dtos.inputs.AccountDetailsInputDto;
 import com.tc.training.smallFinance.dtos.outputs.AccountDetailsOutputDto;
+import com.tc.training.smallFinance.dtos.outputs.HomePageOutputDto;
 import com.tc.training.smallFinance.model.AccountDetails;
 import com.tc.training.smallFinance.service.AccountServiceDetails;
 import com.tc.training.smallFinance.service.Impl.AccountServiceDetailsImpl;
@@ -12,6 +13,8 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("Account")
@@ -33,4 +36,20 @@ public class AccountController {
 
         return accountServiceDetails.getBalance(accNo);
     }
+    @GetMapping("/getAccountByUser")
+    public AccountDetailsOutputDto getAccountByUser(@RequestParam UUID userId){
+       return  accountServiceDetails.getAccountByUser(userId);
+    }
+
+    @GetMapping("/homePage")
+    public HomePageOutputDto getHomePageDetails(@RequestParam Long accNo){
+
+        return accountServiceDetails.getHomePageDetails(accNo);
+
+    }
+    @GetMapping("/setKyc")
+    public AccountDetailsOutputDto verifyKyc(@RequestParam Long accNo){
+        return accountServiceDetails.verifyKyc(accNo);
+    }
+
 }

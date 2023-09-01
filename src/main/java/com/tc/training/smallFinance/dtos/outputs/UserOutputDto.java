@@ -1,24 +1,19 @@
-package com.tc.training.smallFinance.model;
+package com.tc.training.smallFinance.dtos.outputs;
 
 import com.tc.training.smallFinance.utils.Role;
-import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
-@Entity
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+public class UserOutputDto {
+
     private UUID userId;
 
     private String firstName;
 
     private String lastName;
-
-    private String password;
 
     private LocalDate dob;
 
@@ -39,12 +34,16 @@ public class User {
 
     private String  userPhoto;
 
-    
-    private Role roleName = Role.CUSTOMER;
 
+    private Role roleName ;
 
+    private String salarySlip;
 
-    private String firebaseId;
+    private String homeSlip;
+
+    private Long accountNumber;
+
+    private Boolean kyc;
 
 
 }

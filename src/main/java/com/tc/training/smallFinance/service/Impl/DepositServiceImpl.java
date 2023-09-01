@@ -11,6 +11,7 @@ import com.tc.training.smallFinance.service.AccountServiceDetails;
 import com.tc.training.smallFinance.service.DepositService;
 import com.tc.training.smallFinance.service.FixedDepositService;
 import com.tc.training.smallFinance.service.RecurringDepositService;
+import com.tc.training.smallFinance.utils.RdStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +31,8 @@ public class DepositServiceImpl implements DepositService {
     public FDDetails getDetails(Long accNo) {
 
         FDDetails fdDetails = new FDDetails();
-        List<FixedDepositOutputDto> fds = fixedDepositService.getAllFixedDeposit(accNo);
-        List<RecurringDepositOutputDto> rds = recurringDepositService.getAllRecurringDeposit(accNo);
+        List<FixedDepositOutputDto> fds = fixedDepositService.getAllActive(accNo);
+        List<RecurringDepositOutputDto> rds = recurringDepositService.getByStatus(accNo);
         fdDetails.setTotalNoOfFD(fds.size());
         fdDetails.setTotalNoOfRD(rds.size());
         Double fdSum =0D;
@@ -48,11 +49,15 @@ public class DepositServiceImpl implements DepositService {
     public List<Object> getAccounts(Long accNo) {
 
         List<Object> obj = new ArrayList<>();
-        List<RecurringDepositOutputDto> rds = recurringDepositService.getAllRecurringDeposit(accNo);
-        List<FixedDepositOutputDto> fds = fixedDepositService.getAllFixedDeposit(accNo);
+        List<RecurringDepositOutputDto> rds = recurringDepositService.getByStatus(accNo);
+        List<FixedDepositOutputDto> fds = fixedDepositService.getAllActive(accNo);
 
-        for(FixedDepositOutputDto fdout:fds) obj.add(fdout);
-        for(RecurringDepositOutputDto rout:rds) obj.add(rout);
+        for(FixedDepositOutputDto fdout:fds) {
+            if(fdout.getIsActive()) obj.add(fdout);
+        }
+        for(RecurringDepositOutputDto rout:rds) {
+            if(rout.getStatus().equals(RdStatus.ACTIVE)) obj.add(rout);
+        }
 
         return obj;
     }

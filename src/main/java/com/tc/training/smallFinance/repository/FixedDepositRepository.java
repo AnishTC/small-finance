@@ -17,4 +17,6 @@ public interface FixedDepositRepository extends JpaRepository<FixedDeposit, UUID
     List<FixedDeposit> findByAccountNumber(Long accountNumber);
     @Query(value = "select * from fixed_deposit where is_active = 1",nativeQuery = true)
     List<FixedDeposit> findAllByIsActive();
+    @Query(value = "select * from fixed_deposit where is_active = 1 and account_number_account_number = ?1",nativeQuery = true)
+    List<FixedDeposit> findByAccountNumberAndIsActive(Long accNo);
 }

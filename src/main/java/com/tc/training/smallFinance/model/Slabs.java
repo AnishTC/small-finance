@@ -27,6 +27,5 @@ public class Slabs {
 
     private String interestRate;
 
-    @Enumerated
     private TypeOfTransaction typeOfTransaction;
 }

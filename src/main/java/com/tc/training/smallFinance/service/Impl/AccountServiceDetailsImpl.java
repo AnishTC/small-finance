@@ -5,13 +5,14 @@ import com.tc.training.smallFinance.dtos.inputs.AccountDetailsInputDto;
 import com.tc.training.smallFinance.dtos.inputs.FirebaseUserInputDto;
 
 import com.tc.training.smallFinance.dtos.outputs.AccountDetailsOutputDto;
+import com.tc.training.smallFinance.dtos.outputs.FDDetails;
+import com.tc.training.smallFinance.dtos.outputs.HomePageOutputDto;
+import com.tc.training.smallFinance.dtos.outputs.UserOutputDto;
+import com.tc.training.smallFinance.exception.AccountNotFoundException;
 import com.tc.training.smallFinance.model.AccountDetails;
 import com.tc.training.smallFinance.model.User;
 import com.tc.training.smallFinance.repository.AccountRepository;
-import com.tc.training.smallFinance.service.AccountServiceDetails;
-import com.tc.training.smallFinance.service.EmailService;
-import com.tc.training.smallFinance.service.FirebaseUserService;
-import com.tc.training.smallFinance.service.UserService;
+import com.tc.training.smallFinance.service.*;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.Random;
-
+import java.util.UUID;
 
 
 @Service
@@ -38,7 +39,13 @@ public class AccountServiceDetailsImpl implements AccountServiceDetails {
     @Autowired
     private FirebaseUserService firebaseUserService;
 
-    private static long lastTimestamp = 1000000000000000L;
+    @Autowired
+    private DepositService depositService;
+
+    @Autowired
+    private LoanService loanService;
+
+    private static long lastTimestamp = 8804175630060000L;
 
     private static int sequence = 0;
 
@@ -48,19 +55,14 @@ public class AccountServiceDetailsImpl implements AccountServiceDetails {
         accountDetails.setUser(userService.addUser(accountDetailsInputDto));
         accountDetails.setAccountNumber(generateUniqueAccountNumber());
         accountDetails.setOpeningDate(LocalDate.now());
-       /* accountDetails.getUser().setAadharPhoto(encode(accountDetailsInputDto.getAadharPhoto()));
-        accountDetails.getUser().setPanPhoto(encode(accountDetailsInputDto.getPanPhoto()));
-        accountDetails.getUser().setUserPhoto(encode(accountDetailsInputDto.getUserPhoto()));*/
-       // accountRepository.save(accountDetails) ;
         sendEmail(accountDetails.getUser().getEmail(),accountDetails.getUser().getPassword(),accountDetails.getAccountNumber());
         AccountDetailsOutputDto outputDto = modelMapper.map(accountDetails,AccountDetailsOutputDto.class);
         outputDto.setEmail(accountDetails.getUser().getEmail());
 
 
-     //   AccountDetails accountDetails1 =modelMapper.map(accountDetails,AccountDetails.class);
+        AccountDetails accountDetails1 =modelMapper.map(accountDetails,AccountDetails.class);
         FirebaseUserInputDto inputDto = new FirebaseUserInputDto();
         inputDto.setAccountNumber(String.valueOf(accountDetails.getAccountNumber()));
-//        inputDto.setAccountNumber(accountDetails.getAccountNumber());
         inputDto.setName(accountDetails.getUser().getFirstName());
         inputDto.setPassword(accountDetails.getUser().getPassword());
 
@@ -109,6 +111,35 @@ public class AccountServiceDetailsImpl implements AccountServiceDetails {
     public Double getBalance(Long accNo) {
         return accountRepository.findById(accNo).get().getBalance();
     }
+
+    @Override
+    public AccountDetailsOutputDto getAccountByUser(UUID userId) {
+        User user = modelMapper.map(userService.getById(userId),User.class);
+
+        return modelMapper.map(accountRepository.findByUser(user), AccountDetailsOutputDto.class);
+    }
+
+    @Override
+    public HomePageOutputDto getHomePageDetails(Long accNo) {
+
+        AccountDetails accountDetails = accountRepository.findById(accNo).orElseThrow(()->new AccountNotFoundException("no account found with this id"));
+        HomePageOutputDto homePageOutputDto = new HomePageOutputDto();
+        homePageOutputDto.setBalance(accountDetails.getBalance());
+        FDDetails fdDetails = depositService.getDetails(accNo);
+        homePageOutputDto.setDepositAmount(fdDetails.getTotalFdAmount() + fdDetails.getTotalRdAmount());
+        homePageOutputDto.setLoanAmount(loanService.getTotalLoanAmount(accNo));
+        homePageOutputDto.setKyc(accountDetails.getKyc());
+        return homePageOutputDto;
+    }
+
+    @Override
+    public AccountDetailsOutputDto verifyKyc(Long accNo) {
+        AccountDetails accountDetails = accountRepository.findById(accNo).orElseThrow(()->new AccountNotFoundException("no account found with this id"));
+        accountDetails.setKyc(Boolean.TRUE);
+        accountRepository.save(accountDetails);
+        return modelMapper.map(accountDetails,AccountDetailsOutputDto.class);
+    }
+
 
     public AccountDetailsOutputDto updateAccount(AccountDetailsInputDto accountDetailsInputDto, Long accountNumber){
         AccountDetails accountDetails = accountRepository.findById(accountNumber).orElseThrow(()-> new RuntimeException("account not found"));

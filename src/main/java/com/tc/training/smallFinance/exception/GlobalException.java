@@ -35,4 +35,9 @@ public class GlobalException {
     public String handleKycNotCompletedException(KycNotCompletedException kycNotCompletedException){
         return kycNotCompletedException.getMessage();
     }
+
+    @ExceptionHandler(ImageNotUploaded.class)
+    public String handleImageNotUploaded(ImageNotUploaded imageNotUploaded){
+        return imageNotUploaded.getMessage();
+    }
 }

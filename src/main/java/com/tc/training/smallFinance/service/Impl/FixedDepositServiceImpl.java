@@ -70,11 +70,13 @@ public class FixedDepositServiceImpl implements FixedDepositService {
         fixedDeposit.setDepositedDate(LocalDate.now());
         fixedDeposit.setMaturityDate(getOverDate(fixedDeposit.getSlabs(),fixedDeposit.getDepositedDate()));
         fixedDeposit.setTotalAmount(amount);
+       // fixedDeposit.getTransactionIds().add();
+        performTransaction(fixedDeposit,"DEBIT");
         fixedDepositRepository.save(fixedDeposit);
         FixedDepositOutputDto fixedDepositOutputDto = modelMapper.map(fixedDeposit,FixedDepositOutputDto.class);
         fixedDepositOutputDto.setInterestRate(fixedDeposit.getSlabs().getInterestRate());
 
-        performTransaction(fixedDeposit,"DEBIT");
+
 
         return fixedDepositOutputDto;
     }
@@ -139,10 +141,10 @@ public class FixedDepositServiceImpl implements FixedDepositService {
         fd.setInterestAmount(interestAmount);
         fd.getSlabs().setInterestRate(interest);
         fd.setTotalAmount(fd.getAmount()+interestAmount);
+
+      //  fd.getTransactionIds().add();
         closeAccount(fd);
-
         performTransaction(fd,"CREDIT");
-
         FixedDepositOutputDto fixedDepositOutputDto = modelMapper.map(fd,FixedDepositOutputDto.class);
         fixedDepositOutputDto.setInterestRate(interest);
         fixedDepositOutputDto.setInterestAmountAdded(interestAmount);
@@ -151,11 +153,24 @@ public class FixedDepositServiceImpl implements FixedDepositService {
 
     @Override
     public List<FixedDepositOutputDto> getAll() {
-        return null;
+        return fixedDepositRepository.findAll().stream().map(fd->modelMapper.map(fd, FixedDepositOutputDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public FixedDepositOutputDto getById(UUID id) {
+       FixedDeposit fd = fixedDepositRepository.findById(id).orElseThrow(()-> new AccountNotFoundException("no account found with that id"));
+        FixedDepositOutputDto fdout = modelMapper.map(fd,FixedDepositOutputDto.class);
+        return fdout;
+    }
+
+    @Override
+    public List<FixedDepositOutputDto> getAllActive(Long accNo) {
+        List<FixedDeposit> fds = fixedDepositRepository.findByAccountNumberAndIsActive(accNo);
+        return fds.stream().map(fd->modelMapper.map(fd, FixedDepositOutputDto.class)).collect(Collectors.toList());
     }
 
 
-    private void performTransaction(FixedDeposit fd,String type) {
+    private UUID performTransaction(FixedDeposit fd,String type) {
 
         TransactionInputDto transactionInputDto = new TransactionInputDto();
         transactionInputDto.setAmount(fd.getTotalAmount());
@@ -164,7 +179,7 @@ public class FixedDepositServiceImpl implements FixedDepositService {
         transactionInputDto.setType("FD");
         transactionInputDto.setPurpose("FD amount "+type);
         transactionInputDto.setTrans(type);
-        transactionService.deposit(transactionInputDto,fd.getAccountNumber().getAccountNumber());
+        return transactionService.deposit(transactionInputDto,fd.getAccountNumber().getAccountNumber()).getTransactionID();
 
     }
 

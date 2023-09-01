@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.tc.training.smallFinance.dtos.inputs.LoginInputDto;
 import com.tc.training.smallFinance.dtos.outputs.LoginOutputDto;
+import com.tc.training.smallFinance.dtos.outputs.UserOutputDto;
 import com.tc.training.smallFinance.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
@@ -28,6 +31,11 @@ public class UserController {
     public ResponseEntity uploadImage(@RequestParam MultipartFile file1,@RequestParam MultipartFile file2,@RequestParam MultipartFile file3, @RequestParam String userName) throws IOException {
         userService.uploadImage(file1,file2,file3,userName);
         return ResponseEntity.ok("Images Successfully Saved");
+    }
+
+    @PutMapping("/uploadPic")
+    public String uploadPic(@RequestParam MultipartFile file1) throws IOException {
+        return userService.uploadPic(file1);
     }
 
     @GetMapping(value = "/getImages",produces = MediaType.IMAGE_JPEG_VALUE )
@@ -50,5 +58,17 @@ public class UserController {
 //            return ResponseEntity.badRequest().body("Failed to send password reset email: " + e.getMessage());
 //        }
     }
+    @GetMapping("/getAll")
+    public List<UserOutputDto> getAllUsers(){
+        return userService.getAll();
+
+    }
+
+    @GetMapping("/getById")
+    public UserOutputDto getById(@RequestParam UUID id){
+        return userService.getById(id);
+    }
+
+
 
 }

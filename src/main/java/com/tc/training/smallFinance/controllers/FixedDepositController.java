@@ -41,4 +41,14 @@ public class FixedDepositController {
        return fixedDepositService.getAll();
     }
 
+    @GetMapping("/getbyId")
+    public FixedDepositOutputDto getById(@RequestParam UUID id){
+        return fixedDepositService.getById(id);
+    }
+
+    @GetMapping("/getAllActive")
+    public List<FixedDepositOutputDto> getAllActive(Long accNo){
+        return fixedDepositService.getAllActive(accNo);
+    }
+
 }

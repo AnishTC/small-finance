@@ -24,4 +24,9 @@ public class Repayment {
 
     private PaymentStatus paymentStatus = PaymentStatus.UPCOMING;
 
+    private UUID transactionId;
+
+    private Boolean penalty = false;
+
+
 }

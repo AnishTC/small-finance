@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -41,5 +43,7 @@ public class FixedDeposit {
     private Double totalAmount;
 
     private Double interestAmount = 0D;
+
+    private List<UUID> transactionIds = new ArrayList<>();
 
 }

@@ -16,6 +16,8 @@ public class LoginOutputDto {
 
     private String phoneNumber;
 
+    private String email;
+
     private Double balance;
 
     private Double loanAmount = 0D;
@@ -25,6 +27,10 @@ public class LoginOutputDto {
     private Long accNo;
 
     private Boolean kyc;
+
+    private String aadharCardNumber;
+
+    private String panCardNumber;
 
     private Role roleName;
 

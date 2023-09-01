@@ -20,5 +20,9 @@ public interface FixedDepositService {
 
 
     List<FixedDepositOutputDto> getAll();
+
+    FixedDepositOutputDto getById(UUID id);
+
+    List<FixedDepositOutputDto> getAllActive(Long accNo);
 //    public FdOutputDto createFd(FdInputDto fdInputDto);
 }

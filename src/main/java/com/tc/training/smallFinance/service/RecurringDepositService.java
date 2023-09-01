@@ -19,4 +19,6 @@ public interface RecurringDepositService {
     List<RecurringDepositOutputDto> getAllRecurringDeposit(Long accNo);
 
     Double getTotalMoneyInvested(Long accNo);
+
+    List<RecurringDepositOutputDto> getByStatus(Long accNo);
 }

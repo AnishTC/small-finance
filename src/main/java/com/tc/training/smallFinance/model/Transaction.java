@@ -32,7 +32,7 @@ public class Transaction {
 
     private LocalDateTime timestamp;
 
-    @Enumerated
+
     private TypeOfTransaction  whichTransaction;
 
     private String description = "The "+amount+" has been "+transactionType+" for "+whichTransaction;

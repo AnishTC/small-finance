@@ -5,8 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
+
 @Repository
-public interface UserRepository extends JpaRepository<User,Long> {
+public interface UserRepository extends JpaRepository<User, UUID> {
     @Query(value = "select * from user e where e.email = ?1",nativeQuery = true)
     User findByEmail(String userName);
     @Query(value = "select * from user e where e.account_number = ?1",nativeQuery = true)

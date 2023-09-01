@@ -16,9 +16,13 @@ public class LoanOutputDto {
 
     private UUID loanId;
 
+    private String accountNumber;
+
     private LocalDate appliedDate;
 
     private Boolean isActive ;
+
+    private String tenure;
 
     private Status status ;
 
@@ -35,5 +39,9 @@ public class LoanOutputDto {
     private Integer monthlyInterestAmount;
 
     private Double totalAmount;
+
+    private String loanSuppliment1;
+
+    private String loanSuppliment2;
 
 }

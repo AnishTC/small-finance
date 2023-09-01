@@ -14,6 +14,8 @@ public class FixedDepositOutputDto {
 
     private String interestRate;
 
+    private Boolean isActive;
+
     private Long accountNumber;
 
     private LocalDate maturityDate;

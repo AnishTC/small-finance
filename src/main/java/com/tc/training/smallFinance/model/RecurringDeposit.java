@@ -39,7 +39,13 @@ public class RecurringDeposit {
 
     private String interest;
 
-    @OneToMany(mappedBy = "recurringDeposit", cascade = CascadeType.ALL)
+    private  LocalDate nextPaymentDate;
+
+    private Integer totalMissedPaymentCount =0;
+
+    private Integer missedPayments = 0;
+
+    @OneToMany(mappedBy = "recurringDeposit", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private  List<RecurringDepositPayment> rdPayments;
 
 

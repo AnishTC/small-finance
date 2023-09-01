@@ -130,7 +130,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<TransactionOutputDto> getAllTransactions(LocalDate date1, LocalDate date2, Long accNo) {
+    public List<TransactionOutputDto> getAllTransactions(LocalDate date1, LocalDate date2, String type,Long accNo) {
 
         LocalDateTime localDateTime1;
         LocalDateTime localDateTime2;
@@ -143,10 +143,12 @@ public class TransactionServiceImpl implements TransactionService {
         List<Transaction> list  =  transactionRepository.findAllByUserAndDate(localDateTime1,localDateTime2,accNo);
         List<TransactionOutputDto> list1 = new ArrayList<>();
         for(Transaction t:list){
-            TransactionOutputDto tdo = modelMapper.map(t,TransactionOutputDto.class);
-            if(tdo.getFromAccountNumber()==null) tdo.setFromAccountNumber("APA BANK");
-            if(tdo.getToAccountNumber()==null) tdo.setToAccountNumber("APA BANK");
-            list1.add(tdo);
+            if(type==null || type.equals("") || t.getTransactionType().equals(TransactionType.valueOf(type)) ) {
+                TransactionOutputDto tdo = modelMapper.map(t, TransactionOutputDto.class);
+                if (tdo.getFromAccountNumber() == null) tdo.setFromAccountNumber("APA BANK");
+                if (tdo.getToAccountNumber() == null) tdo.setToAccountNumber("APA BANK");
+                list1.add(tdo);
+            }
         }
         Collections.sort(list1, Collections.reverseOrder(Comparator.comparing(TransactionOutputDto::getTimestamp)));
         return list1;
