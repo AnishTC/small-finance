@@ -2,7 +2,12 @@ package com.tc.training.smallFinance.model;
 
 import com.tc.training.smallFinance.utils.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -14,14 +19,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID userId;
 
+    @NotBlank
+    @Size(min=3,message = "Please enter name with atleast 3 characters")
     private String firstName;
 
     private String lastName;
 
+    @NotBlank
+    @Pattern(regexp="^.*(?=.{6,12})(?=.*[a-z])(?=.*[A-Z])(?=.*[@!#$%&*]).*$")
     private String password;
 
     private LocalDate dob;
 
+    @Email
     private String email;
 
     private Integer age;
@@ -36,13 +46,9 @@ public class User {
 
     private String panPhoto;
 
-
     private String  userPhoto;
-
     
     private Role roleName = Role.CUSTOMER;
-
-
 
     private String firebaseId;
 

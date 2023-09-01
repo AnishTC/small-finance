@@ -20,7 +20,6 @@ public class AccountDetails {
     @Id
     private Long accountNumber;
 
-
     private AccountType accountType = AccountType.Savings;
 
     private LocalDate openingDate ;

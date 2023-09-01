@@ -60,6 +60,14 @@ public class RecurringDepositServiceImpl implements RecurringDepositService {
         rd.setMaturityDate(rd.getStartDate().plusMonths(rd.getMonthTenure()));
         rd.setMaturityAmount(calculateMaturityAmount(rd,rd.getMonthTenure()));
         rd.setNextPaymentDate(rd.getStartDate().plusMonths(1));
+        RecurringDepositPayment rdPay = new RecurringDepositPayment();
+        rdPay.setRecurringDeposit(rd);
+        rdPay.setPaymentStatus(PaymentStatus.PAID);
+        rdPay.setPayAmount(rd.getMonthlyPaidAmount());
+        rdPay.setMonthNumber(1);
+        rd.setRdPayments(new ArrayList<>());
+        rdPay.setTransactionId(setTransaction(rd,"DEBIT",rd.getMonthlyPaidAmount()));
+        rd.getRdPayments().add(rdPay);
         rd = recurringDepositRepository.save(rd);
         //monthlyPay(rd.getRId());
         RecurringDepositOutputDto rdout = modelMapper.map(rd, RecurringDepositOutputDto.class);

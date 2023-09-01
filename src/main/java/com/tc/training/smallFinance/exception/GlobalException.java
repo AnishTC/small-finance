@@ -40,4 +40,12 @@ public class GlobalException {
     public String handleImageNotUploaded(ImageNotUploaded imageNotUploaded){
         return imageNotUploaded.getMessage();
     }
+    @ExceptionHandler(ElementNotFound.class)
+    public String handleElementNotFound(ElementNotFound elementNotFound){
+        return elementNotFound.getMessage();
+    }
+    @ExceptionHandler(CustomException.class)
+    public String handleCustomException(CustomException customException){
+        return customException.getMessage();
+    }
 }
