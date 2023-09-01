@@ -115,16 +115,15 @@ public class LoanServiceImpl implements LoanService {
     public LoanOutputDto setLoan(UUID id,String status) {
 
         Loan loan = loanRepository.findById(id).orElseThrow(()->new AccountNotFoundException("account not found"));
-        Period period = Period.between(loan.getStartDate(),loan.getLoanEndDate());
+        Period period = Period.between(loan.getAppliedDate(),loan.getLoanEndDate());
         int months = period.getYears() * 12 + period.getMonths();
         if(status.equals("APPROVE") && loan.getStatus()==Status.UNDER_REVIEW) {
             loan.setStatus(Status.APPROVED);
             Double totalAmountToPay = (loan.getLoanedAmount()*(Double.valueOf(loan.getInterest())/100))*(months/12) + loan.getLoanedAmount();
             loan.setRemainingAmount(totalAmountToPay);
-            loan.setNextPaymentDate(loan.getStartDate().plusMonths(1));
             loan.setStartDate(LocalDate.now());
-            //loan.setRepayments(setRepayment(loan));
-          //  loan.setRepayments(new ArrayList<>());
+            loan.setNextPaymentDate(loan.getStartDate().plusMonths(1));
+            loan.setRepayments(new ArrayList<>());
             loan.setMonthlyInterestAmount((int) Math.round(monthlyPayAmount(loan.getRemainingAmount(),months)));
             setTransaction(loan,"CREDIT",loan.getLoanedAmount());
         }

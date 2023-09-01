@@ -22,8 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.time.LocalDate;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 
 @Service
@@ -150,8 +149,10 @@ public class AccountServiceDetailsImpl implements AccountServiceDetails {
     }
 
     private synchronized Long generateUniqueAccountNumber() {
-        lastTimestamp++;
-        return lastTimestamp;
+        List<AccountDetails> accountDetailsList = accountRepository.findAll();
+        Collections.sort(accountDetailsList, Comparator.comparing(AccountDetails::getAccountNumber));
+        lastTimestamp = accountDetailsList.get(accountDetailsList.size()-1).getAccountNumber();
+        return ++lastTimestamp;
     }
 
     private void sendEmail(String email, String password,Long accountNumber) {
