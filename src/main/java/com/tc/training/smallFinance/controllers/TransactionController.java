@@ -23,9 +23,11 @@ public class TransactionController {
     }
 
     @GetMapping("/allTransactions")
-    public List<TransactionOutputDto> transactionHistory(@RequestParam(required = false)LocalDate date1, @RequestParam(required = false) LocalDate date2, @RequestParam Long accNo ){
+    public List<TransactionOutputDto> transactionHistory(@RequestParam(required = false)LocalDate date1, @RequestParam(required = false) LocalDate date2,@RequestParam(required = false) String type, @RequestParam Long accNo ){
        /* LocalDateTime localDateTime1= date1.atStartOfDay();
         LocalDateTime localDateTime2= LocalDateTime.of(date2, LocalTime.of(23,59,59));*/
-        return transactionService.getAllTransactions(date1,date2,accNo);
+        return transactionService.getAllTransactions(date1,date2,type,accNo);
     }
+
+
 }

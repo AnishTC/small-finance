@@ -10,13 +10,15 @@ public class TransactionInputDto {
 
     private String to;
 
-    private Long amount;
+    private Double amount;
 
     private String purpose;
 
     private String accountNumber;
 
     private String type;
+
+    private String trans;
 
 
 

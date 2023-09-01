@@ -10,5 +10,5 @@ import java.util.List;
 public interface TransactionService {
     TransactionOutputDto deposit(TransactionInputDto transactionInputDto,Long accountNumber);
 
-    List<TransactionOutputDto> getAllTransactions(LocalDate date1, LocalDate date2, Long accNo);
+    List<TransactionOutputDto> getAllTransactions(LocalDate date1, LocalDate date2,String type, Long accNo);
 }

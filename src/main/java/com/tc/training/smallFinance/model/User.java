@@ -1,5 +1,6 @@
 package com.tc.training.smallFinance.model;
 
+import com.tc.training.smallFinance.utils.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -32,16 +33,19 @@ public class User {
 
     private String phoneNumber;
 
-    @Lob
-    @Column( columnDefinition = "LONGBLOB")
     private String aadharPhoto;
 
-    @Lob
-    @Column( columnDefinition = "LONGBLOB")
     private String panPhoto;
 
-    @Lob
-    @Column(columnDefinition = "LONGBLOB")
+
     private String  userPhoto;
+
+    
+    private Role roleName = Role.CUSTOMER;
+
+
+
+    private String firebaseId;
+
 
 }

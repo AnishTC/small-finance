@@ -19,5 +19,7 @@ public class AccountDetailsOutputDto {
 
     private Long balance;
 
+    private Boolean kyc;
+
 
 }

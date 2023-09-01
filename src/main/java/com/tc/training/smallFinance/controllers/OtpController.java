@@ -12,9 +12,17 @@ public class OtpController {
     @Autowired
     private OtpService otpService;
 
-    public ResponseEntity sendOtp(@RequestParam OtpInputDto otpInputDto){
+    @PostMapping("/sendOtp")
+    public ResponseEntity sendOtp(@RequestBody OtpInputDto otpInputDto){
 
         otpService.sendOtp(otpInputDto);
         return ResponseEntity.ok("otp sent");
+    }
+
+    @PostMapping("/verifyOtp")
+    public ResponseEntity verifyOtp(@RequestBody OtpInputDto otpInputDto){
+
+       return  otpService.verifyOtp(otpInputDto);
+
     }
 }

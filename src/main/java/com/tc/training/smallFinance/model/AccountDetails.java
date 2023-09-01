@@ -20,20 +20,19 @@ public class AccountDetails {
     @Id
     private Long accountNumber;
 
+
     private AccountType accountType = AccountType.Savings;
 
     private LocalDate openingDate ;
 
     private LocalDate closingDate;
 
-
-    private Long balance = 0L;
+    private Double balance = 0D;
 
     private Boolean kyc = Boolean.FALSE;
 
     @OneToOne
     @JoinColumn(referencedColumnName = "userId",name="user_Id")
     private User user;
-
 
 }
