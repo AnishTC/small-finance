@@ -15,30 +15,24 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
 
-@Component
+@Configuration
 @Log4j2
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class SecurityFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private RoleAndPermissionService roleAndPermissionService;
+    private final RoleAndPermissionService roleAndPermissionService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("Creating filter for authentication");
@@ -66,20 +60,22 @@ public class SecurityFilter extends OncePerRequestFilter {
                             String userUid = firebaseToken.getUid();
                             User user = userService.getByFirebaseId(userUid);
                             CurrentUser.set(user);
- List<RoleAndPermissionOutputDto> allPermissionByMethodAndUrl = roleAndPermissionService.getAllPermissionByMethodAndUrl(method, uri);
- boolean entry = false;
- for(RoleAndPermissionOutputDto roles : allPermissionByMethodAndUrl) {
-     if (roles.getRoles().contains(user.getRoleName().toString())) {
-         filterChain.doFilter(request, response);
-         entry = true;
-     }
- }
+                            List<RoleAndPermissionOutputDto> allPermissionByMethodAndUrl = roleAndPermissionService.getAllPermissionByMethodAndUrl(method, uri);
+                            boolean entry = false;
+                            for (RoleAndPermissionOutputDto roles : allPermissionByMethodAndUrl) {
+                                if (roles.getRoles().contains(user.getRoleName().toString())) {
+                                    filterChain.doFilter(request, response);
+                                    entry = true;
+                                }
+                            }
 
- if(!entry)  { throw new CustomException("You are not allowed to call this api");}
+                            if (!entry) {
+                                throw new CustomException("You are not allowed to call this api");
+                            }
 
 
                         } catch (FirebaseAuthException e) {
-                         throw new CustomException("No firebase authentication Token instance");
+                            throw new CustomException("No firebase authentication Token instance");
                         }
                     }
                 } else {
@@ -91,7 +87,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     }
 
     private boolean isPublicApi(String uri) {
-        final List<String> publicApis = List.of("/users/login","/Account/create");
+        final List<String> publicApis = List.of("/users/login", "/Account/create");
         return publicApis.contains(uri);
     }
 

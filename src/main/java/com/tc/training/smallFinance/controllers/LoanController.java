@@ -4,6 +4,7 @@ import com.tc.training.smallFinance.dtos.inputs.LoanInputDto;
 import com.tc.training.smallFinance.dtos.outputs.LoanOutputDto;
 import com.tc.training.smallFinance.service.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -77,8 +78,8 @@ public class LoanController {
         return loanService.getAllByStatus(status);
     }
 
-    @PutMapping("/uploadSuppliments")
-    public void uploadSuppliment(@RequestParam MultipartFile file1, @RequestParam MultipartFile file2,  @RequestParam UUID id){
+    @PutMapping(value = "/uploadSuppliments/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public void uploadSuppliment(@RequestParam MultipartFile file1, @RequestParam MultipartFile file2,  @PathVariable UUID id){
         loanService.uploadSuppliment(file1,file2,id);
     }
 

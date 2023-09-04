@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
     @Value("${firebase.storage.bucket-name}")
     private String bucketName;
 
-    @Value("bank_firebase.json")
+    @Value("secret.json")
     private String FIREBASE_CONFIG_FILE;
 
     private Storage storage;
@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
     public void initialize() throws IOException {
         ClassLoader classLoader = UserServiceImpl.class.getClassLoader();
 
-        File file = new File(Objects.requireNonNull(classLoader.getResource("bank_firebase.json")).getFile());
+        File file = new File(Objects.requireNonNull(classLoader.getResource("secret.json")).getFile());
         FileInputStream serviceAccount = new FileInputStream(file.getAbsoluteFile());
         //  InputStream serviceAccount = getClass().getResourceAsStream(FIREBASE_CONFIG_FILE);
 

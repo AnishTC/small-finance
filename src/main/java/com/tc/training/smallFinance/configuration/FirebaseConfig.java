@@ -16,7 +16,7 @@ import java.io.InputStream;
 @Configuration
 public class FirebaseConfig {
 
-    @Value("bank_firebase.json")
+    @Value("${firebase.config-file}")
     private String FIREBASE_CONFIG_FILE;
 
     @Bean
