@@ -141,7 +141,6 @@ public class AccountServiceDetailsImpl implements AccountServiceDetails {
         return modelMapper.map(accountDetails,AccountDetailsOutputDto.class);
     }
 
-
     public AccountDetailsOutputDto updateAccount(AccountDetailsInputDto accountDetailsInputDto, Long accountNumber){
         AccountDetails accountDetails = accountRepository.findById(accountNumber).orElseThrow(()-> new RuntimeException("account not found"));
         AccountDetails accountDetails1 = modelMapper.map(accountDetailsInputDto, AccountDetails.class);
