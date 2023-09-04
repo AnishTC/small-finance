@@ -21,7 +21,7 @@ public class FirebaseConfig {
 
     @Bean
     public void initFirebase() throws IOException {
-        InputStream firebaseFile = new ClassPathResource(FIREBASE_CONFIG_FILE).getInputStream();
+        InputStream firebaseFile = new ClassPathResource("bank_firebase.json").getInputStream();
         FirebaseOptions firebaseOptions = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(firebaseFile))
                 .build();
