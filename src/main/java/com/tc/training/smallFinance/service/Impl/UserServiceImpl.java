@@ -26,6 +26,7 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -39,6 +40,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.Period;
@@ -66,7 +68,7 @@ public class UserServiceImpl implements UserService {
     @Value("${firebase.storage.bucket-name}")
     private String bucketName;
 
-    @Value("secret.json")
+    @Value("${firebase.config-file}")
     private String FIREBASE_CONFIG_FILE;
 
     private Storage storage;
@@ -102,15 +104,10 @@ public class UserServiceImpl implements UserService {
 
     @PostConstruct
     public void initialize() throws IOException {
-        ClassLoader classLoader = UserServiceImpl.class.getClassLoader();
-
-        File file = new File(Objects.requireNonNull(classLoader.getResource("secret.json")).getFile());
-        FileInputStream serviceAccount = new FileInputStream(file.getAbsoluteFile());
-        //  InputStream serviceAccount = getClass().getResourceAsStream(FIREBASE_CONFIG_FILE);
-
+        InputStream firebaseFile = new ClassPathResource(FIREBASE_CONFIG_FILE).getInputStream();
 
         this.storage = StorageOptions.newBuilder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setCredentials(GoogleCredentials.fromStream(firebaseFile))
                 .build()
                 .getService();
     }
