@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RoleAndPermissionServiceImpl implements RoleAndPermissionService {
@@ -33,9 +34,9 @@ public class RoleAndPermissionServiceImpl implements RoleAndPermissionService {
     }
 
     @Override
-    public RoleAndPermissionOutputDto getAllPermissionByMethodAndUrl(RequestMethod method, String uri) {
+    public List<RoleAndPermissionOutputDto> getAllPermissionByMethodAndUrl(RequestMethod method, String uri) {
 // RoleAndPermission roleAndPermission=roleAndPermissionRepo.findByHttpMethodTypeAndUri(httpMethod,uri ).orElseThrow(() -> new ElementNotFound("no such permisiions with this methodand uri"));
-        RoleAndPermission roleAndPermission = roleAndPermissionRepo.findByMethodAndUri(method, uri).orElseThrow(() -> new ElementNotFound("no such permissions with this method and uri"));
-        return modelMapper.map(roleAndPermission, RoleAndPermissionOutputDto.class);
+        List<RoleAndPermission> roleAndPermission = roleAndPermissionRepo.findByMethodAndUri(method, uri);
+        return roleAndPermission.stream().map(role->modelMapper.map(role, RoleAndPermissionOutputDto.class)).collect(Collectors.toList());
     }
 }

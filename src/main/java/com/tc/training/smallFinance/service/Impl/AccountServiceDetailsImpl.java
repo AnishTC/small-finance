@@ -9,6 +9,7 @@ import com.tc.training.smallFinance.dtos.outputs.FDDetails;
 import com.tc.training.smallFinance.dtos.outputs.HomePageOutputDto;
 import com.tc.training.smallFinance.dtos.outputs.UserOutputDto;
 import com.tc.training.smallFinance.exception.AccountNotFoundException;
+import com.tc.training.smallFinance.exception.CustomException;
 import com.tc.training.smallFinance.model.AccountDetails;
 import com.tc.training.smallFinance.model.User;
 import com.tc.training.smallFinance.repository.AccountRepository;
@@ -54,20 +55,21 @@ public class AccountServiceDetailsImpl implements AccountServiceDetails {
         accountDetails.setUser(userService.addUser(accountDetailsInputDto));
         accountDetails.setAccountNumber(generateUniqueAccountNumber());
         accountDetails.setOpeningDate(LocalDate.now());
-        sendEmail(accountDetails.getUser().getEmail(),accountDetails.getUser().getPassword(),accountDetails.getAccountNumber());
-        AccountDetailsOutputDto outputDto = modelMapper.map(accountDetails,AccountDetailsOutputDto.class);
-        outputDto.setEmail(accountDetails.getUser().getEmail());
+        try {
+            sendEmail(accountDetails.getUser().getEmail(), accountDetails.getUser().getPassword(), accountDetails.getAccountNumber());
+            AccountDetailsOutputDto outputDto = modelMapper.map(accountDetails, AccountDetailsOutputDto.class);
+            outputDto.setEmail(accountDetails.getUser().getEmail());
 
+            AccountDetails accountDetails1 = modelMapper.map(accountDetails, AccountDetails.class);
+            FirebaseUserInputDto inputDto = new FirebaseUserInputDto();
+            inputDto.setAccountNumber(String.valueOf(accountDetails.getAccountNumber()));
+            inputDto.setName(accountDetails.getUser().getFirstName());
+            inputDto.setPassword(accountDetails.getUser().getPassword());
 
-        AccountDetails accountDetails1 =modelMapper.map(accountDetails,AccountDetails.class);
-        FirebaseUserInputDto inputDto = new FirebaseUserInputDto();
-        inputDto.setAccountNumber(String.valueOf(accountDetails.getAccountNumber()));
-        inputDto.setName(accountDetails.getUser().getFirstName());
-        inputDto.setPassword(accountDetails.getUser().getPassword());
-
-        UserRecord userInFireBase = firebaseUserService.createUserInFireBase(inputDto);
-        accountDetails.getUser().setFirebaseId(userInFireBase.getUid());
-        accountDetails =accountRepository.save(accountDetails);
+            UserRecord userInFireBase = firebaseUserService.createUserInFireBase(inputDto);
+            accountDetails.getUser().setFirebaseId(userInFireBase.getUid());
+            accountDetails = accountRepository.save(accountDetails);
+        }catch(Exception e){throw new CustomException("error in creating account");}
         AccountDetailsOutputDto accountDetailsOutputDto =  modelMapper.map(accountDetails,AccountDetailsOutputDto.class);
         accountDetailsOutputDto.setEmail(accountDetails.getUser().getEmail());
         return accountDetailsOutputDto;

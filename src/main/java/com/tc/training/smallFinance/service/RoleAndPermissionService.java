@@ -13,6 +13,6 @@ public interface RoleAndPermissionService {
 
     List<RoleAndPermissionOutputDto> getAllPermission();
 
-    RoleAndPermissionOutputDto getAllPermissionByMethodAndUrl(RequestMethod httpMethod, String uri);
+    List<RoleAndPermissionOutputDto> getAllPermissionByMethodAndUrl(RequestMethod httpMethod, String uri);
 
 }

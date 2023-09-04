@@ -66,27 +66,32 @@ public class SecurityFilter extends OncePerRequestFilter {
                             String userUid = firebaseToken.getUid();
                             User user = userService.getByFirebaseId(userUid);
                             CurrentUser.set(user);
- RoleAndPermissionOutputDto allPermissionByMethodAndUrl = roleAndPermissionService.getAllPermissionByMethodAndUrl(method, uri);
- if (allPermissionByMethodAndUrl.getRoles().contains(user.getRoleName().toString())) {
-                            filterChain.doFilter(request, response);
- } else {
- throw new CustomException("You are not allowed to call this api");
+ List<RoleAndPermissionOutputDto> allPermissionByMethodAndUrl = roleAndPermissionService.getAllPermissionByMethodAndUrl(method, uri);
+ boolean entry = false;
+ for(RoleAndPermissionOutputDto roles : allPermissionByMethodAndUrl) {
+     if (roles.getRoles().contains(user.getRoleName().toString())) {
+         filterChain.doFilter(request, response);
+         entry = true;
+     }
  }
 
+ if(!entry)  { throw new CustomException("You are not allowed to call this api");}
+
+
                         } catch (FirebaseAuthException e) {
-//  we need to handle                         throw new CustomException("No firebase authentication Token instance");
+                         throw new CustomException("No firebase authentication Token instance");
                         }
                     }
                 } else {
                     log.error("No token sent or blank token sent");
-//                    throw new CustomException("No token sent or blank token sent");
+                    throw new CustomException("No token sent or blank token sent");
                 }
             }
         }
     }
 
     private boolean isPublicApi(String uri) {
-        final List<String> publicApis = List.of("/users/login");
+        final List<String> publicApis = List.of("/users/login","/Account/create");
         return publicApis.contains(uri);
     }
 

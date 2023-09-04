@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
     private Storage storage;
 
 
-    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*";
 
 
     public User addUser(AccountDetailsInputDto accountDetailsInputDto) {
@@ -212,6 +212,9 @@ public class UserServiceImpl implements UserService {
             AccountDetails accountDetails = accountRepository.findById(userName).orElseThrow(() -> new AccountNotFoundException("no account found with that account number"));
             User user = accountDetails.getUser();
             loginOutputDto = modelMapper.map(accountDetails, LoginOutputDto.class);
+            loginOutputDto.setAccessToken(signInFireBaseOutput.getIdToken());
+            loginOutputDto.setRefreshToken(signInFireBaseOutput.getRefreshToken());
+            loginOutputDto.setExpiresIn(signInFireBaseOutput.getExpiresIn());
             loginOutputDto.setFirstName(user.getFirstName());
             loginOutputDto.setLastName(user.getLastName());
             loginOutputDto.setPhoneNumber(user.getPhoneNumber());
